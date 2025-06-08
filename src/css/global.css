@@ -8,6 +8,17 @@
   font-family: "Roboto", sans-serif;
 }
 
+:root {
+  --primary-color: #E50914;
+  --black-color: #000;
+  --white-color: #FFFFFF;
+}
+
+body {
+  background-color: var(--black-color);
+  color: var(--white-color);
+}
+
 button, select {
   background-color: transparent;
   border: none;
