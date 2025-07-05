@@ -112,7 +112,6 @@ async function getTopRated(apiKey) {
     const movies = data.results
 
     const top10 = movies.sort((a, b) => b.vote_average - a.vote_average).slice(0, 10);
-    console.log(top10)
 
     const carousel = document.querySelector('.carousel')
     if (carousel) {
@@ -126,7 +125,6 @@ async function getTopRated(apiKey) {
           const response = await fetch(`https://api.themoviedb.org/3/movie/${top10[i].id}/images?api_key=${apiKey}`)
           .then((r) => r.json())
 
-          console.log(response)
           const postersPt = response.posters.filter(poster => poster.iso_639_1 === 'pt');
           const posterPath = postersPt[0]?.file_path;
           const img = document.createElement('img');
