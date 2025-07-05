@@ -19,9 +19,18 @@ body {
   color: var(--white-color);
 }
 
-button, select {
+button, select, input {
   background-color: transparent;
   border: none;
   outline: none;
   cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
 }
