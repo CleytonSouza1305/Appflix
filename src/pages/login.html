@@ -3,9 +3,50 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="../css/login.css">
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="shortcut icon" href="../images/netflix-logo.png" type="image/x-icon">
   <title>AppFlix | Login</title>
 </head>
 <body>
-  <h1>Página de login</h1>
+  <div class="background"></div>
+  <main>
+    <header>
+    <div class="netflix-logo">
+      <img src="../images/netflix-image.png" alt="Logo da Netflix">
+    </div>
+    </header>
+    <form id="form-login">
+      <h1>Entrar</h1>
+
+      <div class="input-container">
+        <div class="input-area">
+          <input class="email-input" id="email" type="email" name="email" placeholder=" " autocomplete="email">
+          <span class="email-label">Email</span>
+        </div>
+        <p class="txt-error" id="email-error"></p>
+        <div class="input-area">
+          <input class="password-input" id="password" type="password" name="password" placeholder=" ">
+          <span class="password-label">Senha</span>
+        </div>
+        <p class="txt-error" id="password-error"></p>
+        <button id="login-btn" disabled type="submit">Entrar</button>
+      </div>
+
+      <p style="margin-top: 2rem; margin-bottom: 2rem;">OU</p>
+      <button id="acess-code" type="button">Usar um código de acesso</button>
+      <p><a href="#">Esqueceu a senha?</a></p>
+      <div class="check-box-area">
+        <input type="checkbox" id="remember-me"> 
+        <label for="remember-me">Lembre-se de mim</label>
+      </div>
+      <footer>
+        <p>Primeira vez aqui? <a href="#">Assine agora.</a></p>
+        <p class="page-info">Esta página é protegida pelo Google reCAPTCHA para garantir que você não é um robô.</p>
+        <a class="last-link" href="#">Saiba mais.</a>
+      </footer>
+    </form>
+  </main>
 </body>
 </html>
