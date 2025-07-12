@@ -87,7 +87,7 @@ document.querySelectorAll('.email-input').forEach((input) => {
       if (!nextPageBtn.disabled) {
         nextPageBtn.addEventListener('click', () => {
           localStorage.setItem('emai', value)
-          window.location = '/src/pages/login.html'
+          window.location = "./src/pages/login.html"     
         })
       }
     }
