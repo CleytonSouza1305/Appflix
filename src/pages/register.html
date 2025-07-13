@@ -1,62 +1,104 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <link rel="stylesheet" href="../css/login.css">
-  <link rel="stylesheet" href="../css/global.css">
-  <link rel="shortcut icon" href="../images/netflix-logo.png" type="image/x-icon">
-  <title>AppFlix | Register</title>
-</head>
-<body>
-  <div class="background"></div>
-  <main>
-    <header>
-    <div class="netflix-logo">
-      <img src="../images/netflix-image.png" alt="Logo da Netflix">
+    <link rel="stylesheet" href="../css/login.css" />
+    <link rel="stylesheet" href="../css/global.css" />
+    <link
+      rel="shortcut icon"
+      href="../images/netflix-logo.png"
+      type="image/x-icon"
+    />
+    <title>AppFlix | Register</title>
+  </head>
+  <body>
+    <div class="background"></div>
+    <main>
+      <header>
+        <div class="netflix-logo">
+          <img src="../images/netflix-image.png" alt="Logo da Netflix" />
+        </div>
+      </header>
+      <form id="form-register">
+        <h1>Criar conta</h1>
+        <div class="error-content"></div>
+
+        <div class="input-container">
+          <div class="input-area">
+            <input
+              class="form-input name-input"
+              id="name"
+              name="name"
+              placeholder=" "
+              autocomplete="name"
+            />
+            <span class="name-label">Name</span>
+          </div>
+          <p class="txt-error" id="name-error"></p>
+
+          <div class="input-area">
+            <input
+              class="form-input email-input"
+              id="email"
+              type="email"
+              name="email"
+              placeholder=" "
+              autocomplete="email"
+            />
+            <span class="email-label">Email</span>
+          </div>
+          <p class="txt-error" id="email-error"></p>
+          <div class="input-area">
+            <input
+              class="form-input password-input"
+              id="password"
+              type="password"
+              name="password"
+              placeholder=" "
+            />
+            <span class="password-label">Senha</span>
+          </div>
+          <p class="txt-error" id="password-error"></p>
+
+          <div class="input-area">
+            <input
+              class="form-input phone-input"
+              id="phone"
+              type="phone"
+              name="phone"
+              placeholder=" "
+              autocomplete="phone"
+            />
+            <span class="phone-label">Telefone</span>
+          </div>
+          <p class="txt-error" id="phone-error"></p>
+
+          <button id="login-btn" disabled type="submit">Criar conta</button>
+        </div>
+
+        <div class="check-box-area">
+          <input type="checkbox" id="remember-me" />
+          <label for="remember-me">Lembre-se de mim</label>
+        </div>
+        <footer>
+          <p>Possui uma conta? <a href="./login.html">Entrar.</a></p>
+          <p class="page-info">
+            Esta página é protegida pelo Google reCAPTCHA para garantir que você
+            não é um robô.
+          </p>
+          <a class="last-link" href="#">Saiba mais.</a>
+        </footer>
+      </form>
+    </main>
+
+    <div class="loading-container display" id="loading">
+      <div class="loader-wrapper">
+        <div class="netflix-loading"></div>
+      </div>
     </div>
-    </header>
-    <form id="form-register">
-      <h1>Criar conta</h1>
 
-      <div class="input-container">
-        <div class="input-area">
-          <input class="name-input" id="name" type="name" name="name" placeholder=" " autocomplete="name">
-          <span class="name-label">Name</span>
-        </div>
-        <p class="txt-error" id="name-error"></p>
-
-        <div class="input-area">
-          <input class="email-input" id="email" type="email" name="email" placeholder=" " autocomplete="email">
-          <span class="email-label">Email</span>
-        </div>
-        <p class="txt-error" id="email-error"></p>
-        <div class="input-area">
-          <input class="password-input" id="password" type="password" name="password" placeholder=" ">
-          <span class="password-label">Senha</span>
-        </div>
-        <p class="txt-error" id="password-error"></p>
-
-        <div class="input-area">
-          <input class="phone-input" id="phone" type="phone" name="phone" placeholder=" " autocomplete="phone">
-          <span class="phone-label">Telefone</span>
-        </div>
-        <p class="txt-error" id="phone-error"></p>
-
-        <button id="login-btn" disabled type="submit">Criar conta</button>
-      </div>
-
-      <div class="check-box-area">
-        <input type="checkbox" id="remember-me"> 
-        <label for="remember-me">Lembre-se de mim</label>
-      </div>
-      <footer>
-        <p>Possui uma conta? <a href="./login.html">Entrar.</a></p>
-        <p class="page-info">Esta página é protegida pelo Google reCAPTCHA para garantir que você não é um robô.</p>
-        <a class="last-link" href="#">Saiba mais.</a>
-      </footer>
-    </form>
-  </main>
-</body>
+    <script src="../js/create-user.js"></script>
+  </body>
 </html>
