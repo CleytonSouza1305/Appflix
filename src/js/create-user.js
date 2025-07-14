@@ -3,12 +3,6 @@ function startApp() {
   const submitBtn = document.getElementById("login-btn");
   const form = document.querySelector("form");
 
-  const emailInput = document.getElementById('email')
-  emailInput.value = localStorage.getItem('email')
-
-  const passwordInput = document.getElementById('password')
-  passwordInput.value = localStorage.getItem('password')
-
   localStorage.clear()
 
   let validEmail = false;
@@ -22,7 +16,6 @@ function startApp() {
     } else if (submitBtn.textContent === 'Criar conta') {
       submitBtn.disabled = !(validEmail && validPassword && validName && validPhone);
     }
-    
   }
 
   form.addEventListener("submit", (ev) => {
@@ -188,10 +181,7 @@ async function registerReq(email, password, name, phone) {
       throw new Error(data.message)
     }
 
-    localStorage.setItem('email', email)
-    localStorage.setItem('password', password)
-
-    window.location = './login.html'
+    await loginReq(email, password)
 
   } catch (e) {
     console.error(`Erro na requisição, motivo: ${e}`)
