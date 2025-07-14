@@ -189,7 +189,7 @@ async function registerReq(email, password, name, phone) {
     }
 
     localStorage.setItem('email', email)
-    localStorage.setItem('password', email)
+    localStorage.setItem('password', password)
 
     window.location = './login.html'
 
