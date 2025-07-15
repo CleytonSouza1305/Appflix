@@ -3,6 +3,9 @@ function startApp() {
   const submitBtn = document.getElementById("login-btn");
   const form = document.querySelector("form");
 
+  const email = localStorage.getItem('email')
+  const emailInput = document.getElementById('email').value = email
+
   localStorage.clear()
 
   let validEmail = false;
