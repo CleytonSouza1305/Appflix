@@ -21,7 +21,7 @@ function startApp() {
   form.addEventListener("submit", (ev) => {
     ev.preventDefault();
 
-    const emailValue = emailInput.value
+    const emailValue = document.getElementById('email').value
     const passwordValue = document.getElementById('password').value
 
     const h1Content = document.querySelector('h1')
