@@ -4,9 +4,9 @@ function startApp() {
   const form = document.querySelector("form");
 
   const email = localStorage.getItem('email')
-  const emailInput = document.getElementById('email').value = email
+  const emailInput = document.getElementById('email')
 
-  localStorage.clear()
+  emailInput.value = email
 
   let validEmail = false;
   let validPassword = false;
@@ -193,4 +193,9 @@ async function registerReq(email, password, name, phone) {
   }
 }
 
-startApp();
+const token = localStorage.getItem('token')
+if (!token) {
+  startApp()
+} else {
+  location.href = './browse.html'
+}
