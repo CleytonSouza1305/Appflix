@@ -1,1 +1,62 @@
-@import url('../css/global.css')
+:root {
+  --primary-color: #E50914;
+  --black-color: #000;
+  --white-color: #FFFFFF;
+  --gray-color: #5F5F5F;
+}
+
+body {
+  height: 100vh;
+  width: 100vw;
+  color: var(--white-color);
+  background-color: var(--black-color);
+}
+
+main {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+main .profile-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+main .profile-content .info-container .content-image,
+.more-profile-btn {
+  width: 125px;
+  height: 125px;
+  margin-right: 2rem;
+  border: 4px solid transparent;
+}
+
+main .profile-content .info-container .content-image img {
+  width: 100%;
+  height: 100%;
+}
+
+main .profile-content .info-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.more-profile-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  border: 4px solid var(--white-color);
+}
+
+.display {
+  display: none;
+}
