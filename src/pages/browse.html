@@ -5,19 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="shortcut icon" href="../images/netflix-logo.png" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
   <link rel="stylesheet" href="../css/browse.css">
+  <link rel="stylesheet" href="../css/global.css">
   <title>AppFlix</title>
 </head>
 <body>
   <main>
     <h1>Quem está assistindo?</h1>
-
-    <div class="profiles">
-
-    </div>
-
-    <a href="./manageProfiles"><button type="button">Gerenciar perfis</button></a>
+    <div class="profile-content"></div>
+    <button id="manage-profile-btn">Gerenciar Perfis</button>
   </main>
+
+  <div class="loading-container display" id="loading">
+    <div class="loader-wrapper">
+      <div class="netflix-loading"></div>
+    </div>
+  </div>
 
   <script src="../js/browse.js"></script>
 </body>
