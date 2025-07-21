@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,7 +14,9 @@
   <main>
     <h1>Quem está assistindo?</h1>
     <div class="profile-content"></div>
-    <button id="manage-profile-btn">Gerenciar Perfis</button>
+    <div class="button-content">
+      <button id="manage-profile-btn">Gerenciar Perfis</button>
+    </div>
   </main>
 
   <div class="loading-container display" id="loading">
@@ -23,11 +25,76 @@
     </div>
   </div>
 
-  <!-- <div class="more-profile-content">
-    <form method="post">
+  <div class="more-profile-content display">
+    <form method="post" id="profile-form">
+      <div class="cancel-button">
+        <i class="fa-solid fa-x"></i>
+      </div>
       <h2>Criar perfil</h2>
+
+      <div class="infos-new-profile">
+        <div class="input-group">
+          <label for="profileName">Nome do perfil:</label>
+          <input type="text" id="profileName" placeholder="Ex: Infantil">
+        </div>
+
+        <div class="input-group">
+          <label for="profilePin">Senha do perfil:</label>
+          <input type="text" id="profilePin" placeholder="Ex: 1234">
+        </div>
+
+        <div class="switch-group">
+          <label for="isKid">Perfil infantil?</label>
+          <label class="switch">
+            <input type="checkbox" id="isKid">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <p class="error-message"></p>
+        <button type="submit">Criar</button>
+      </div> 
     </form>
-  </div> -->
+  </div>
+
+  <div class="edit-profile-content display">
+    <form method="post" id="edit-profile-form">
+
+      <div class="content-top">
+        <h2>Editar perfil</h2>
+
+        <div class="image-group">
+          <img id="user-image" src="" alt="Imagem de perfil de usuário">
+        </div>
+      </div>
+      
+       <div class="infos-edit-profile">
+       <div class="input-group">
+          <label for="editedName">Nome do perfil:</label>
+          <input type="text" id="editedName">
+        </div>
+
+        <div class="input-group">
+          <label for="editPin">Senha do perfil:</label>
+          <input type="text" id="editPin">
+        </div>
+
+        <div class="switch-group">
+          <label for="isKid">Perfil infantil?</label>
+          <label class="switch">
+            <input type="checkbox" id="isKidEdited">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <p class="error-message"></p>
+        <div class="buttons-edit-content">
+          <button type="submit" id="save-edit">Salvar</button>
+          <button type="button" id="cancel-edit">Cancelar</button>
+        </div>
+      </div> 
+    </form>
+  </div>
   <script src="../js/browse.js"></script>
 </body>
 </html>
