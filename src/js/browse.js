@@ -29,63 +29,55 @@ async function searchProfile(token) {
 }
 
 function createCardProfile(data) {
-  const container = document.querySelector('.profile-content')
-  if (!container) {
-    console.error('Container não encontrado.')
-    return
-  }
+  const container = document.querySelector('.profile-content');
+  if (!container) return;
 
-  container.innerHTML = ''
+  container.innerHTML = '';
 
   for (let i = 0; i < data.length; i++) {
-    const { id, avatarUrl, profileName, profilePin } = data[i]
+    const { id, avatarUrl, profileName, profilePin } = data[i];
 
-    const card = document.createElement('div')
-    card.classList.add('card')
+    const card = document.createElement('div');
+    card.classList.add('card');
 
-    const infoContainer = document.createElement('div')
-    infoContainer.classList.add('info-container')
-    infoContainer.dataset.profile = id
+    const infoContainer = document.createElement('div');
+    infoContainer.classList.add('info-container');
+    infoContainer.dataset.profile = id;
 
-    const contentImage = document.createElement('div')
-    contentImage.classList.add('content-image')
+    const contentImage = document.createElement('div');
+    contentImage.classList.add('content-image');
+    const img = document.createElement('img');
+    img.src = avatarUrl;
+    img.alt = profileName;
+    contentImage.appendChild(img);
 
-    const img = document.createElement('img')
-    img.src = avatarUrl
-    img.alt = profileName
+    const name = document.createElement('p');
+    name.classList.add('profile-name');
+    name.innerText = profileName;
 
-    const name = document.createElement('p')
-    name.classList.add('profile-name')
-    name.innerText = profileName
+    infoContainer.append(contentImage, name);
 
-    contentImage.appendChild(img)
-    infoContainer.append(contentImage, name)
-    card.appendChild(infoContainer)
+    const contentBottom = document.createElement('div');
+    contentBottom.classList.add('bottom-container');
+    const lockIcon = document.createElement('i');
+    lockIcon.className = 'fa-solid fa-lock';
+    contentBottom.appendChild(lockIcon);
 
-    const contentBottom = document.createElement('div')
-    contentBottom.classList.add('bottom-container')
-
-    if (profilePin !== null) {
-      const lockIcon = document.createElement('i')
-      lockIcon.className = 'fa-solid fa-lock'
-
-      contentBottom.appendChild(lockIcon)
+    if (profilePin === null) {
+      contentBottom.classList.add('display');
     }
 
-    card.appendChild(contentBottom)
-    container.appendChild(card)
+    card.appendChild(infoContainer);
+    card.appendChild(contentBottom);
+    container.appendChild(card);
   }
-
 
   if (data.length < 5) {
-    const moreProfile = document.createElement('div')
-    moreProfile.classList.add('more-profile-btn')
-
-    moreProfile.innerHTML = `<i class="fa-solid fa-plus"></i>`
-    container.append(moreProfile)
+    const moreProfile = document.createElement('div');
+    moreProfile.classList.add('more-profile-btn');
+    moreProfile.innerHTML = `<i class="fa-solid fa-plus"></i>`;
+    container.append(moreProfile);
   }
-
-  console.log(data)
 }
 
 async function startApp(token) {
