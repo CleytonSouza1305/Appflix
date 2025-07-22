@@ -194,8 +194,24 @@ async function registerReq(email, password, name, phone) {
 }
 
 const token = localStorage.getItem('token')
+
 if (!token) {
-  startApp()
+  startApp();
 } else {
-  location.href = './browse.html'
+  fetch('https://appflix-api.onrender.com/api/profiles', {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  }).then(response => {
+    if (response.ok) {
+      location.href = './browse.html';
+    } else {
+      localStorage.removeItem('token');
+      startApp();
+    }
+  }).catch(() => {
+    localStorage.removeItem('token');
+    startApp();
+  });
 }
