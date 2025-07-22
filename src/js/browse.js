@@ -195,6 +195,24 @@ async function profileData(token, id) {
   }
 }
 
+function openEditModal(data) {
+  const contentModal = document.querySelector('.edit-profile-content');
+
+  if (!contentModal) return;
+
+  contentModal.classList.remove('display');
+
+  document.getElementById('editedName').value = data.profile_name;
+  document.getElementById('editPin').value = data.profile_pin || '';
+  document.getElementById('isKidEdited').checked = data.is_kid;
+  document.getElementById('user-image').src = data.avatar_link;
+
+  const cancelBtn = document.getElementById('cancel-edit');
+  cancelBtn.addEventListener('click', () => {
+    contentModal.classList.add('display');
+  });
+}
+
 async function editProfile(token) {
   const manageProfile = document.getElementById('manage-profile-btn');
   const contents = document.querySelectorAll('.edit-profile-div');
@@ -212,22 +230,59 @@ async function editProfile(token) {
           const id = currentContent.dataset.profileId;
 
           const data = await profileData(token, id);
-          if (!contentModal) return;
 
-          contentModal.classList.remove('display');
+          if (data.profile_pin) {
+           const txtError = document.querySelector('.error-pin')
+           txtError.textContent = ''
 
-          document.getElementById('editedName').value = data.profile_name;
-          document.getElementById('editPin').value = data.profile_pin || '';
-          document.getElementById('isKidEdited').checked = data.is_kid;
-          document.getElementById('user-image').src = data.avatar_link;
+           const modal = document.querySelector('.modal-pin')
+           modal.classList.remove('display')
 
-          const cancelBtn = document.getElementById('cancel-edit');
-          cancelBtn.addEventListener('click', () => {
-            contentModal.classList.add('display');
+          const pinInputs = modal.querySelectorAll('.pin-inputs input');
+
+          pinInputs[0].focus()
+
+          pinInputs.forEach((input) => {
+            input.value = '';
+
+            input.addEventListener('input', (ev) => {
+              const actualInput = ev.currentTarget;
+              const position = parseInt(actualInput.dataset.position);
+
+              if (actualInput.value.length === 1) {
+                const nextInput = document.querySelector(`[data-position="${position + 1}"]`);
+                if (nextInput) nextInput.focus();
+              }
+            });
           });
+
+
+          modal.addEventListener('click', (ev) => {
+            if (ev.target.classList.contains('modal-pin')) {
+              modal.classList.add('display')
+            }
+          })
+
+          const sbmitBtn = document.getElementById('submitPin')
+          sbmitBtn.addEventListener('click', (ev) => {
+            
+            let digitedPassword = ''
+            pinInputs.forEach((pin) => digitedPassword += pin.value)
+
+            if (digitedPassword !== data.profile_pin) {
+              pinInputs.forEach(p => p.value = '')
+              txtError.textContent = 'Senha inválida.'
+              pinInputs[0].focus()
+            } else {
+              modal.classList.add('display')
+              openEditModal(data)
+            }
+          })
+          } else {
+            openEditModal(data)
+          }
         });
       });
-
     } else {
       manageProfile.textContent = 'Gerenciar Perfis';
       contents.forEach((content) => content.classList.add('display'));
