@@ -93,6 +93,18 @@ async function createProfileReq(token, profileName, profilePin, isKid) {
   loader.classList.remove('display')
 
   try {
+    const messageError = document.querySelector('.error-message')
+    messageError.textContent = ''
+
+    if (profilePin && !/^\d{4}$/.test(profilePin)) {
+      messageError.textContent = `O PIN deve conter exatamente 4 números`;
+      return;
+    }
+
+    if (profilePin === '') {
+      profilePin = null
+    }
+
     const response = await fetch(`https://appflix-api.onrender.com/api/profiles`, {
     method: 'POST',
     headers: {
@@ -101,9 +113,6 @@ async function createProfileReq(token, profileName, profilePin, isKid) {
       },
     body: JSON.stringify({ profileName, profilePin, isKid })
     })
-
-    const messageError = document.querySelector('.error-message')
-    messageError.textContent = ''
 
     const data = await response.json()
 
@@ -187,47 +196,44 @@ async function profileData(token, id) {
 }
 
 async function editProfile(token) {
+  const manageProfile = document.getElementById('manage-profile-btn');
+  const contents = document.querySelectorAll('.edit-profile-div');
+  const contentModal = document.querySelector('.edit-profile-content');
 
-  const manageProfile = document.getElementById('manage-profile-btn')
-  manageProfile.addEventListener(('click'), (btn) => {
-    btn.currentTarget.textContent = 'Cancel'
+  manageProfile.addEventListener('click', () => {
+    if (manageProfile.textContent === 'Gerenciar Perfis') {
+      manageProfile.textContent = 'Cancel';
 
-    const contents = document.querySelectorAll('.edit-profile-div')
-    contents.forEach((content) => {
-      content.classList.remove('display')
-      content.addEventListener('click', async (ev) => {
-        const currentContent = ev.currentTarget
-        const id = currentContent.dataset.profileId
+      contents.forEach((content) => {
+        content.classList.remove('display');
 
-        const data = await profileData(token, id)
-        
-        const content = document.querySelector('.edit-profile-content')
-        if (!content) {
-          return
-        }
+        content.addEventListener('click', async (ev) => {
+          const currentContent = ev.currentTarget;
+          const id = currentContent.dataset.profileId;
 
-        content.classList.remove('display')
-        console.log(data)
+          const data = await profileData(token, id);
+          if (!contentModal) return;
 
-        const profileName = document.getElementById('editedName')
-        profileName.value = data.profile_name
+          contentModal.classList.remove('display');
 
-        const profilePin = document.getElementById('editPin')
-        profilePin.value = data.profile_pin
+          document.getElementById('editedName').value = data.profile_name;
+          document.getElementById('editPin').value = data.profile_pin || '';
+          document.getElementById('isKidEdited').checked = data.is_kid;
+          document.getElementById('user-image').src = data.avatar_link;
 
-        const isKid = document.getElementById('isKidEdited')
-        isKid.checked = data.is_kid
+          const cancelBtn = document.getElementById('cancel-edit');
+          cancelBtn.addEventListener('click', () => {
+            contentModal.classList.add('display');
+          });
+        });
+      });
 
-        const image = document.getElementById('user-image')
-        image.src = data.avatar_link
-
-        const cancelBtn = document.getElementById('cancel-edit')
-        cancelBtn.addEventListener('click', () => {
-          content.classList.add('display')
-        })
-      })
-    })
-  })
+    } else {
+      manageProfile.textContent = 'Gerenciar Perfis';
+      contents.forEach((content) => content.classList.add('display'));
+      contentModal.classList.add('display');
+    }
+  });
 }
 
 
