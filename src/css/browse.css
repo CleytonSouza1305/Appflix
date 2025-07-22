@@ -306,9 +306,10 @@ button[type='submit'],
   transform: translateX(22px);
 }
 
-form p {
+form p,
+.error-pin {
   color: var(--primary-color);
-  font-weight: 600;
+  font-weight: 400;
   font-size: 1.2rem;
 }
 
@@ -353,6 +354,69 @@ form p {
 
 .buttons-edit-content #save-edit {
   background-color: #24a3e2;
+}
+
+.modal-pin {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-content {
+  background-color: #141414;
+  padding: 30px;
+  border-radius: 8px;
+  text-align: center;
+  color: white;
+  width: 300px;
+}
+
+.modal-content h2 {
+  margin-bottom: 20px;
+  font-weight: normal;
+}
+
+.pin-inputs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.pin-inputs input {
+  width: 40px;
+  height: 50px;
+  font-size: 24px;
+  text-align: center;
+  border: none;
+  border-radius: 4px;
+  background: #333;
+  color: white;
+}
+
+.pin-inputs input:focus {
+  outline: 2px solid #24a3e2;
+}
+
+button#submitPin {
+  background-color: #24a3e2;
+  border: none;
+  padding: 10px 20px;
+  color: var(--white-color);
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.error-pin {
+  margin-bottom: 1rem;
 }
 
 .display {
