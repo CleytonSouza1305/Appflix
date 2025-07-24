@@ -195,6 +195,43 @@ async function profileData(token, id) {
   }
 }
 
+async function updateProfile(token, profileId, updatedData) {
+  const loader = document.getElementById('loading')
+  loader.classList.remove('display')
+
+  try {
+    const messageError = document.querySelector('.error-message')
+    messageError.textContent = ''
+
+    const response = await fetch(`https://appflix-api.onrender.com/api/profiles/${profileId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+       Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({ 
+        profileName: updatedData.profileName, 
+        profilePin: updatedData.profilePin, 
+        isKid: updatedData.isKid 
+      })
+    })
+
+    const data = await response.json()
+
+    if (!response.ok) {
+      messageError.textContent = data.message
+      return
+    }
+
+    location.reload()
+
+  } catch (e) {
+    console.error(`Erro ao criar perfil, motivo: ${e}`)
+  } finally {
+    loader.classList.add('display')
+  }
+}
+
 function openEditModal(data) {
   const contentModal = document.querySelector('.edit-profile-content');
 
@@ -211,6 +248,39 @@ function openEditModal(data) {
   cancelBtn.addEventListener('click', () => {
     contentModal.classList.add('display');
   });
+
+  const editForm = document.getElementById("edit-profile-form")
+
+  editForm.addEventListener('submit', (ev) => {
+    ev.preventDefault()
+
+    const profileName = document.getElementById('editedName')
+    const profilePin = document.getElementById('editPin')
+
+    const erroMessage = document.querySelector('.error-edit-message')
+    erroMessage.textContent = ''
+
+    const updatedData = {}
+
+    if (profileName.value.length < 1 || profileName.value.length > 20) {
+      erroMessage.innerText = 'Nome de perfil inválido'
+    } else {
+      updatedData.profileName = profileName.value
+    }
+
+    if (profilePin.value.length > 0 && profilePin.value.length !== 4) {
+        erroMessage.innerText = 'Formato de senha inválido';
+    } else if (profilePin.value.length === 4) {
+      updatedData.profilePin = profilePin.value;
+    } else {
+      updatedData.profilePin = null;
+    }
+
+    const isKidInput = document.getElementById('isKidEdited')
+    updatedData.isKid = isKidInput.checked
+
+    updateProfile(token, data.id, updatedData)
+  })
 }
 
 async function editProfile(token) {
@@ -290,7 +360,6 @@ async function editProfile(token) {
     }
   });
 }
-
 
 async function startApp(token) {
   const data = await searchProfile(token)
