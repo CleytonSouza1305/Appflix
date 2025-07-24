@@ -65,6 +65,9 @@
 
         <div class="image-group">
           <img id="user-image" src="" alt="Imagem de perfil de usuário">
+          <div class="change-image-div">
+            <button type="button"><i class="fa-solid fa-pencil"></i></button>
+          </div>
         </div>
       </div>
       
@@ -80,7 +83,7 @@
         </div>
 
         <div class="switch-group">
-          <label for="isKid">Perfil infantil?</label>
+          <label for="isKidEdited">Perfil infantil?</label>
           <label class="switch">
             <input type="checkbox" id="isKidEdited">
             <span class="slider"></span>
@@ -97,18 +100,24 @@
   </div>
 
   <div class="modal-pin display">
-  <div class="modal-content">
-    <h2>Digite seu PIN</h2>
-    <div class="pin-inputs">
-      <input data-position="1" type="password" maxlength="1" inputmode="numeric" />
-      <input data-position="2" type="password" maxlength="1" inputmode="numeric" />
-      <input data-position="3" type="password" maxlength="1" inputmode="numeric" />
-      <input data-position="4" type="password" maxlength="1" inputmode="numeric" />
+    <div class="modal-content">
+      <h2>Digite seu PIN</h2>
+      <div class="pin-inputs">
+        <input data-position="1" type="password" maxlength="1" inputmode="numeric" />
+        <input data-position="2" type="password" maxlength="1" inputmode="numeric" />
+        <input data-position="3" type="password" maxlength="1" inputmode="numeric" />
+        <input data-position="4" type="password" maxlength="1" inputmode="numeric" />
+      </div>
+      <p class="error-pin"></p>
+      <button id="submitPin">Confirmar</button>
     </div>
-    <p class="error-pin"></p>
-    <button id="submitPin">Confirmar</button>
   </div>
-</div>
+
+  <div class="change-avatar display">
+    <div class="all-avatars">
+
+    </div>
+  </div>
   <script src="../js/browse.js"></script>
 </body>
 </html>
