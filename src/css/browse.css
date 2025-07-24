@@ -313,7 +313,8 @@ form p,
   font-size: 1.2rem;
 }
 
-.edit-profile-div {
+.edit-profile-div,
+.content-top .image-group .change-image-div {
   background-image: linear-gradient(-75deg, rgba(0, 0, 0, 0.7), rgb(0, 0, 0, 0.6), rgb(0, 0, 0, 0.7));
   width: 100%;
   height: 100%;
@@ -324,7 +325,8 @@ form p,
   justify-content: center;
 }
 
-.edit-profile-div i {
+.edit-profile-div i,
+.content-top .image-group .change-image-div i {
   font-size: 1.5rem;
   color: var(--white-color);
 }
@@ -334,6 +336,10 @@ form p,
   align-items: center;
   justify-content: space-between;
   width: 100%;
+}
+
+.content-top .image-group {
+  position: relative;
 }
 
 .content-top .image-group img {
@@ -348,7 +354,6 @@ form p,
   align-items: center;
   justify-content: center;
   gap: 2rem;
-  margin-bottom: 2rem;
   width: 100%;
 }
 
