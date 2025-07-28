@@ -232,6 +232,58 @@ async function updateProfile(token, profileId, updatedData) {
   }
 }
 
+async function allAvatarsReq(token) {
+  const loader = document.getElementById('loading')
+  loader.classList.remove('display')
+  try {
+    const response = await fetch(`https://appflix-api.onrender.com/api/profiles/avatars`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+        }
+    })
+
+    const data = await response.json()
+
+    if (!response.ok) {
+      console.error(`Erro ao fazer requisição, motivo: ${data.message}`)
+      return
+    }
+
+    return data
+  } catch (e) {
+    console.error(`Erro ao fazer requisição, motivo: ${e.message}`)
+  } finally {
+   loader.classList.add('display')
+  }
+}
+
+async function createAvatarsCard(token) {
+  const data = await allAvatarsReq(token)
+
+  const content = document.querySelector('.all-avatars')
+  content.innerHTML = ''
+
+  for (let i = 0; i < data.length; i++) {
+    const card = document.createElement('div')
+    card.classList.add('avatar-card')
+    card.dataset.avatarId = data[i].id
+
+    const imageCard = document.createElement('div')
+    imageCard.classList.add('image-card')
+
+    const image = document.createElement('img')
+    image.src = data[i].avatarUrl
+    image.alt = 'Avatar de perfil'
+
+    imageCard.append(image)
+    card.append(imageCard)
+    content.append(card) 
+  }
+  console.log(data)
+}
+
 function openEditModal(data) {
   const contentModal = document.querySelector('.edit-profile-content');
 
@@ -250,6 +302,21 @@ function openEditModal(data) {
   });
 
   const editForm = document.getElementById("edit-profile-form")
+
+  const changeAvatarBtn = document.querySelector('.change-image-div')
+    if (changeAvatarBtn) {
+      changeAvatarBtn.addEventListener('click', (ev) => {
+        const allAvatarsModal = document.querySelector('.change-avatar')
+        allAvatarsModal.classList.remove('display')
+
+        createAvatarsCard(token)
+        const closeAvatarModal = document.querySelector('.cancel-div-avatar')
+        closeAvatarModal.addEventListener('click', (ev) => {
+          allAvatarsModal.classList.add('display')
+
+        })
+    })
+  }
 
   editForm.addEventListener('submit', (ev) => {
     ev.preventDefault()
@@ -278,9 +345,13 @@ function openEditModal(data) {
 
     const isKidInput = document.getElementById('isKidEdited')
     updatedData.isKid = isKidInput.checked
-
+    
+    // COLOCAR A FUÇÃO QUE CHAMA A MUDANÇA DE AVATAR, PASSANDO COMO PARÂMETRO O ID DO PERFIL
+    
     updateProfile(token, data.id, updatedData)
   })
+
+
 }
 
 async function editProfile(token) {
