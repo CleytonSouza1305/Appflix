@@ -95,6 +95,9 @@
           <button type="submit" id="save-edit">Salvar</button>
           <button type="button" id="cancel-edit">Cancelar</button>
         </div>
+        <div class="delete-div">
+          <button type="button" id="delete-profile">Deletar</button>
+        </div>
       </div> 
     </form>
   </div>
@@ -117,8 +120,16 @@
     <div class="cancel-div-avatar">
       <i class="fa-solid fa-x"></i>
     </div>
-    <div class="all-avatars">
+    <div class="all-avatars"></div>
+  </div>
 
+  <div class="confirm-modal display">
+    <div class="confirm-div">
+      <p>Tem certeza que deseja deletar este perfil?</p>
+      <div class="buttons-confirm-modal">
+        <button type="button" id="confirm-delete">Confirmar</button>
+        <button type="button" id="cancel-delete">Cancelar</button>
+      </div>
     </div>
   </div>
   <script src="../js/browse.js"></script>

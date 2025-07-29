@@ -245,13 +245,35 @@ form .infos-edit-profile .input-group input:focus {
 }
 
 button[type='submit'],
-#cancel-edit {
+#cancel-edit,
+#delete-profile {
   background-color: var(--primary-color);
   color: var(--white-color);
   font-size: 1.5rem;
   padding: 0.5rem 2rem;
   border-radius: 4px;
   width: 300px;
+}
+
+.delete-div {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.delete-div #delete-profile {
+  width: 630px;
+  background-color: transparent;
+  border: 2px solid rgb(255, 255, 255, 0.5);
+  color: rgb(255, 255, 255, 0.5);
+  transition: ease-in-out 150ms;
+}
+
+.delete-div #delete-profile:hover {
+  border-color: var(--white-color);
+  color: var(--white-color);
 }
 
 .switch-group {
@@ -495,6 +517,67 @@ button#submitPin {
   object-fit: cover;
 }
 
+.confirm-modal {
+  position: fixed;
+  top: 0;
+  background-image: linear-gradient(#000000db);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.confirm-modal .confirm-div {
+  width: 400px;
+  height: 150px;
+  background-color: var(--white-color);
+  color: var(--black-color);
+  font-size: 1.2rem;
+  text-align: center;
+  padding: 1rem;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.confirm-modal .confirm-div .buttons-confirm-modal {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.confirm-modal .confirm-div .buttons-confirm-modal button {
+  padding: 0.5rem 1.5rem;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  font-weight: 500;
+  color: var(--white-color);
+  transition: ease-in-out 150ms;
+}
+
+.buttons-confirm-modal button#confirm-delete {
+  background-color: #64B161;
+}
+
+.buttons-confirm-modal button#confirm-delete:hover {
+  border-color: hsl(118, 34%, 24%);
+  background-color: hsl(118, 34%, 44%);
+}
+
+.buttons-confirm-modal button#cancel-delete {
+  background-color: #E50914;
+}
+
+.buttons-confirm-modal button#cancel-delete:hover {
+  border-color: hsl(357, 92%, 27%);
+  background-color: hsl(357, 92%, 37%);
+}
+
 .display {
   display: none;
 }
@@ -528,5 +611,9 @@ button#submitPin {
   .buttons-edit-content button,
   #cancel-edit {
     width: 150px;
+  }
+
+  .delete-div #delete-profile {
+    width: 335px;
   }
 }
