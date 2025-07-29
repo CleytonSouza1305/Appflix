@@ -259,7 +259,39 @@ async function allAvatarsReq(token) {
   }
 }
 
+async function changeAvatarImage(token, profileId, avatarId) {
+  +avatarId
+  const loader = document.getElementById('loading')
+  loader.classList.remove('display')
+  try {
+    const response = await fetch(`https://appflix-api.onrender.com/api/profiles/avatar/${profileId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+        },
+      body: JSON.stringify({ avatarId })
+    })
+
+    const data = await response.json()
+
+    if (!response.ok) {
+      console.error(`Erro ao fazer requisição, motivo: ${data.message}`)
+      return
+    }
+
+    return data
+  } catch (e) {
+    console.error(`Erro ao fazer requisição, motivo: ${e.message}`)
+  } finally {
+   loader.classList.add('display')
+  }
+}
+
 async function createAvatarsCard(token) {
+  const loader = document.getElementById('loading')
+  loader.classList.remove('display')
+
   const data = await allAvatarsReq(token)
 
   const content = document.querySelector('.all-avatars')
@@ -281,7 +313,22 @@ async function createAvatarsCard(token) {
     card.append(imageCard)
     content.append(card) 
   }
-  console.log(data)
+
+  const avatars = document.querySelectorAll('.avatar-card')
+    if (avatars.length > 0) {
+        avatars.forEach((avatar) => {
+          avatar.addEventListener('click', () => {
+            const avatarId = avatar.dataset.avatarId
+            localStorage.setItem('avatar', avatarId)
+
+            const modal = document.querySelector('.change-avatar')
+            setTimeout(() => {
+               modal.classList.add('display')
+            }, 500)
+          })
+      })
+    }
+  loader.classList.add('display')
 }
 
 function openEditModal(data) {
@@ -297,7 +344,7 @@ function openEditModal(data) {
   document.getElementById('user-image').src = data.avatar_link;
 
   const cancelBtn = document.getElementById('cancel-edit');
-  cancelBtn.addEventListener('click', () => {
+  cancelBtn.addEventListener('click', (ev) => {
     contentModal.classList.add('display');
   });
 
@@ -305,13 +352,14 @@ function openEditModal(data) {
 
   const changeAvatarBtn = document.querySelector('.change-image-div')
     if (changeAvatarBtn) {
-      changeAvatarBtn.addEventListener('click', (ev) => {
+      changeAvatarBtn.addEventListener('click', () => {
         const allAvatarsModal = document.querySelector('.change-avatar')
         allAvatarsModal.classList.remove('display')
 
         createAvatarsCard(token)
+
         const closeAvatarModal = document.querySelector('.cancel-div-avatar')
-        closeAvatarModal.addEventListener('click', (ev) => {
+        closeAvatarModal.addEventListener('click', () => {
           allAvatarsModal.classList.add('display')
 
         })
@@ -346,9 +394,13 @@ function openEditModal(data) {
     const isKidInput = document.getElementById('isKidEdited')
     updatedData.isKid = isKidInput.checked
     
-    // COLOCAR A FUÇÃO QUE CHAMA A MUDANÇA DE AVATAR, PASSANDO COMO PARÂMETRO O ID DO PERFIL
+    const avatarId = localStorage.getItem('avatar')
+    if (avatarId !== null) {
+      changeAvatarImage(token, data.id, avatarId)
+    }
     
     updateProfile(token, data.id, updatedData)
+    localStorage.removeItem('avatar')
   })
 
 
@@ -428,6 +480,7 @@ async function editProfile(token) {
       manageProfile.textContent = 'Gerenciar Perfis';
       contents.forEach((content) => content.classList.add('display'));
       contentModal.classList.add('display');
+      localStorage.removeItem('avatar')
     }
   });
 }
