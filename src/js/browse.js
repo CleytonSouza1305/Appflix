@@ -346,7 +346,36 @@ async function createAvatarsCard(token) {
   loader.classList.add("display");
 }
 
-function openEditModal(data) {
+async function deleteProfile(token, id) {
+  const loader = document.getElementById("loading");
+  loader.classList.remove("display");
+
+  try {
+    const response = await fetch(
+      `https://appflix-api.onrender.com/api/profiles/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error(`Erro ao deletar perfil, motivo: ${data.message}`);
+      return;
+    }
+  } catch (e) {
+    console.error(`Erro ao deletar perfil, motivo: ${e}`);
+  } finally {
+    loader.classList.add("display");
+  }
+}
+
+async function openEditModal(data) {
   const contentModal = document.querySelector(".edit-profile-content");
 
   if (!contentModal) return;
@@ -416,6 +445,33 @@ function openEditModal(data) {
     updateProfile(token, data.id, updatedData);
     localStorage.removeItem("avatar");
   });
+
+  const deleteProfileBtn = document.getElementById('delete-profile')
+
+  const profiles = await searchProfile(token)
+  if (profiles.length < 2) {
+    deleteProfileBtn.classList.add('display')
+    
+  } else {
+    deleteProfileBtn.classList.remove('display')
+    deleteProfileBtn.addEventListener('click', () => {
+    const confirmModal = document.querySelector('.confirm-modal')
+    confirmModal.classList.remove('display')
+
+    const cancelDelete = document.getElementById('cancel-delete')
+    cancelDelete.addEventListener('click', () => {
+      confirmModal.classList.add('display')
+    })
+
+    const confirmEdit = document.getElementById('confirm-delete')
+    confirmEdit.addEventListener('click', () => {
+      deleteProfile(token, data.id)
+      confirmModal.classList.add('display')
+
+      location.reload()
+    })
+    })
+  }
 }
 
 async function editProfile(token) {
