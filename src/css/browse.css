@@ -35,7 +35,7 @@ main .profile-content {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6rem 2rem;
+  gap: 7rem 2rem;
   flex-wrap: wrap;
   width: 100%;
   min-height: 200px;
@@ -154,6 +154,7 @@ button#manage-profile-btn {
   font-size: 1.5rem;
   transition: ease-in-out 100ms;
   border-radius: 4px;
+  margin-bottom: 1rem;
 }
 
 button#manage-profile-btn:hover {
@@ -595,17 +596,17 @@ button#submitPin {
   }
 
   .card, .more-profile-btn {
-    width: 100px;
+    width: 135px;
     height: 100px;
   }
 
   .content-image {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
   }
 
   main .profile-content  {
-    gap: 6rem 1rem;
+    gap: 7rem 1rem;
   }
 
   .buttons-edit-content button,
