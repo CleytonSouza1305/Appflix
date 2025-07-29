@@ -476,7 +476,7 @@ button#submitPin {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
   gap: 1rem;
-  padding: 1rem 3rem;
+  padding: 2rem 3rem;
   width: 100%;
   height: 100%;
   justify-items: center; 
