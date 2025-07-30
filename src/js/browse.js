@@ -89,6 +89,9 @@ function createCardProfile(data) {
     moreProfile.innerHTML = `<i class="fa-solid fa-plus"></i>`;
     container.append(moreProfile);
   }
+
+  const profiles = document.querySelectorAll('.edit-profile-div')
+  console.log(profiles)
 }
 
 async function createProfileReq(token, profileName, profilePin, isKid) {
@@ -161,8 +164,10 @@ function createProfile(token) {
 
         content.classList.add("display");
 
-        const data = await searchProfile();
+        const data = await searchProfile(token)
         createCardProfile(data);
+
+        location.reload()
       });
     });
   }
