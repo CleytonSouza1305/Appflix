@@ -459,7 +459,7 @@ async function openEditModal(data) {
     
   } else {
     deleteProfileBtn.classList.remove('display')
-    deleteProfileBtn.addEventListener('click', () => {
+    deleteProfileBtn.onclick = () => {
     const confirmModal = document.querySelector('.confirm-modal')
     confirmModal.classList.remove('display')
 
@@ -475,7 +475,7 @@ async function openEditModal(data) {
 
       location.reload()
     })
-    })
+    }
   }
 }
 
