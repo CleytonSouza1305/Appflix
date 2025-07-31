@@ -90,8 +90,8 @@ function createCardProfile(data) {
     container.append(moreProfile);
   }
 
-  const profiles = document.querySelectorAll('.edit-profile-div')
-  console.log(profiles)
+  const profiles = document.querySelectorAll(".edit-profile-div");
+  console.log(profiles);
 }
 
 async function createProfileReq(token, profileName, profilePin, isKid) {
@@ -164,10 +164,10 @@ function createProfile(token) {
 
         content.classList.add("display");
 
-        const data = await searchProfile(token)
+        const data = await searchProfile(token);
         createCardProfile(data);
 
-        location.reload()
+        location.reload();
       });
     });
   }
@@ -371,10 +371,13 @@ async function deleteProfile(token, id) {
 
     if (!response.ok) {
       console.error(`Erro ao deletar perfil, motivo: ${data.message}`);
-      return;
+      return false; 
     }
+
+    return true;
   } catch (e) {
     console.error(`Erro ao deletar perfil, motivo: ${e}`);
+    return false;
   } finally {
     loader.classList.add("display");
   }
@@ -451,31 +454,33 @@ async function openEditModal(data) {
     localStorage.removeItem("avatar");
   });
 
-  const deleteProfileBtn = document.getElementById('delete-profile')
+  const deleteProfileBtn = document.getElementById("delete-profile");
 
-  const profiles = await searchProfile(token)
+  const profiles = await searchProfile(token);
   if (profiles.length < 2) {
-    deleteProfileBtn.classList.add('display')
-    
+    deleteProfileBtn.classList.add("display");
   } else {
-    deleteProfileBtn.classList.remove('display')
+    deleteProfileBtn.classList.remove("display");
     deleteProfileBtn.onclick = () => {
-    const confirmModal = document.querySelector('.confirm-modal')
-    confirmModal.classList.remove('display')
+      const confirmModal = document.querySelector(".confirm-modal");
+      confirmModal.classList.remove("display");
 
-    const cancelDelete = document.getElementById('cancel-delete')
-    cancelDelete.addEventListener('click', () => {
-      confirmModal.classList.add('display')
-    })
+      const cancelDelete = document.getElementById("cancel-delete");
+      cancelDelete.addEventListener("click", (ev) => {
+        ev.stopPropagation();
+        confirmModal.classList.add("display");
+      });
 
-    const confirmEdit = document.getElementById('confirm-delete')
-    confirmEdit.addEventListener('click', () => {
-      deleteProfile(token, data.id)
-      confirmModal.classList.add('display')
-
-      location.reload()
-    })
-    }
+      const confirDelete = document.getElementById("confirm-delete");
+      confirDelete.replaceWith(confirDelete.cloneNode(true));
+      document.getElementById("confirm-delete").addEventListener("click", async () => {
+        const success = await deleteProfile(token, data.id);
+        if (success) {
+          confirmModal.classList.add("display");
+          location.reload();
+        }
+      });
+    };
   }
 }
 
