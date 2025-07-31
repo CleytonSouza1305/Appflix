@@ -488,10 +488,14 @@ async function editProfile(token) {
   const manageProfile = document.getElementById("manage-profile-btn");
   const contents = document.querySelectorAll(".edit-profile-div");
   const contentModal = document.querySelector(".edit-profile-content");
+  const moreProfileBtn = document.querySelector('.more-profile-btn')
 
   manageProfile.addEventListener("click", () => {
     if (manageProfile.textContent === "Gerenciar Perfis") {
       manageProfile.textContent = "Cancel";
+      if (moreProfileBtn) {
+        moreProfileBtn.classList.add('display')
+      }
 
       contents.forEach((content) => {
         content.classList.remove("display");
@@ -556,6 +560,9 @@ async function editProfile(token) {
       });
     } else {
       manageProfile.textContent = "Gerenciar Perfis";
+       if (moreProfileBtn) {
+        moreProfileBtn.classList.remove('display')
+      }
       contents.forEach((content) => content.classList.add("display"));
       contentModal.classList.add("display");
       localStorage.removeItem("avatar");
