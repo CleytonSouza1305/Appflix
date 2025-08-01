@@ -89,9 +89,6 @@ function createCardProfile(data) {
     moreProfile.innerHTML = `<i class="fa-solid fa-plus"></i>`;
     container.append(moreProfile);
   }
-
-  const profiles = document.querySelectorAll(".edit-profile-div");
-  console.log(profiles);
 }
 
 async function createProfileReq(token, profileName, profilePin, isKid) {
@@ -371,7 +368,7 @@ async function deleteProfile(token, id) {
 
     if (!response.ok) {
       console.error(`Erro ao deletar perfil, motivo: ${data.message}`);
-      return false; 
+      return false;
     }
 
     return true;
@@ -473,13 +470,15 @@ async function openEditModal(data) {
 
       const confirDelete = document.getElementById("confirm-delete");
       confirDelete.replaceWith(confirDelete.cloneNode(true));
-      document.getElementById("confirm-delete").addEventListener("click", async () => {
-        const success = await deleteProfile(token, data.id);
-        if (success) {
-          confirmModal.classList.add("display");
-          location.reload();
-        }
-      });
+      document
+        .getElementById("confirm-delete")
+        .addEventListener("click", async () => {
+          const success = await deleteProfile(token, data.id);
+          if (success) {
+            confirmModal.classList.add("display");
+            location.reload();
+          }
+        });
     };
   }
 }
@@ -488,13 +487,13 @@ async function editProfile(token) {
   const manageProfile = document.getElementById("manage-profile-btn");
   const contents = document.querySelectorAll(".edit-profile-div");
   const contentModal = document.querySelector(".edit-profile-content");
-  const moreProfileBtn = document.querySelector('.more-profile-btn')
+  const moreProfileBtn = document.querySelector(".more-profile-btn");
 
   manageProfile.addEventListener("click", () => {
     if (manageProfile.textContent === "Gerenciar Perfis") {
       manageProfile.textContent = "Cancel";
       if (moreProfileBtn) {
-        moreProfileBtn.classList.add('display')
+        moreProfileBtn.classList.add("display");
       }
 
       contents.forEach((content) => {
@@ -560,13 +559,88 @@ async function editProfile(token) {
       });
     } else {
       manageProfile.textContent = "Gerenciar Perfis";
-       if (moreProfileBtn) {
-        moreProfileBtn.classList.remove('display')
+      if (moreProfileBtn) {
+        moreProfileBtn.classList.remove("display");
       }
       contents.forEach((content) => content.classList.add("display"));
       contentModal.classList.add("display");
       localStorage.removeItem("avatar");
     }
+  });
+}
+
+function nextPage(data) {
+  console.log(data)
+
+  
+}
+
+async function verifyUser(token) {
+  const profiles = await searchProfile(token);
+  console.log(profiles);
+
+  const contents = document.querySelectorAll(".card");
+  contents.forEach((card) => {
+    card.addEventListener("click", async (ev) => {
+      const card = ev.currentTarget;
+      const actualProfile = card.querySelector(".edit-profile-div");
+      if (actualProfile.classList.contains("display")) {
+        const id = actualProfile.dataset.profileId;
+        const profile = await profileData(token, id);
+
+        if (!profile.profile_pin) {
+          nextPage(profile)
+          return;
+        }
+
+        const txtError = document.querySelector(".error-pin");
+        txtError.textContent = "";
+
+        const modal = document.querySelector(".modal-pin");
+        modal.classList.remove("display");
+
+        const pinInputs = modal.querySelectorAll(".pin-inputs input");
+
+        pinInputs[0].focus();
+
+        pinInputs.forEach((input) => {
+          input.value = "";
+
+          input.addEventListener("input", (ev) => {
+            const actualInput = ev.currentTarget;
+            const position = parseInt(actualInput.dataset.position);
+
+            if (actualInput.value.length === 1) {
+              const nextInput = document.querySelector(
+                `[data-position="${position + 1}"]`
+              );
+              if (nextInput) nextInput.focus();
+            }
+          });
+        });
+
+        modal.addEventListener("click", (ev) => {
+          if (ev.target.classList.contains("modal-pin")) {
+            modal.classList.add("display");
+          }
+        });
+
+        const sbmitBtn = document.getElementById("submitPin");
+        sbmitBtn.addEventListener("click", (ev) => {
+          let digitedPassword = "";
+          pinInputs.forEach((pin) => (digitedPassword += pin.value));
+
+          if (digitedPassword !== profile.profile_pin) {
+            pinInputs.forEach((p) => (p.value = ""));
+            txtError.textContent = "Senha inválida.";
+            pinInputs[0].focus();
+          } else {
+            modal.classList.add("display");
+            nextPage(profile)
+          }
+        });
+      }
+    });
   });
 }
 
@@ -576,6 +650,8 @@ async function startApp(token) {
 
   createProfile(token);
   editProfile(token);
+
+  verifyUser(token);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
