@@ -171,4 +171,11 @@ async function getTopRated(apiKey) {
   }
 }
 
-getTopRated(key);
+const token = localStorage.getItem('token')
+if (!token) {
+  getTopRated(key);
+} else {
+  location.href = './src/pages/browse.html'
+}
+
+
