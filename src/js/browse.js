@@ -686,6 +686,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (!token) {
     location.href = "./login.html";
   } else {
+    
     const isValidToken = await validateToken(token, './login.html')
     if (isValidToken) {
       startApp(token);
