@@ -570,15 +570,11 @@ async function editProfile(token) {
 }
 
 function nextPage(data) {
-  console.log(data)
-
-  
+  localStorage.setItem('profileId', data.id)
+  location.href = './profile.html'
 }
 
 async function verifyUser(token) {
-  const profiles = await searchProfile(token);
-  console.log(profiles);
-
   const contents = document.querySelectorAll(".card");
   contents.forEach((card) => {
     card.addEventListener("click", async (ev) => {
