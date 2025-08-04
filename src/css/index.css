@@ -292,7 +292,7 @@ main .new-user p#p-price {
 .questions-container,
 footer {
   width: 100%;
-  padding: 0 8rem;
+  padding: 0 2rem;
   margin-bottom: 4rem;
 }
 
@@ -555,13 +555,14 @@ footer .last-child > a {
   visibility: hidden;
 }
 
-/* --- Responsividade --- */
-
-/* Tablets e telas médias (até 1024px) */
 @media (max-width: 1024px) {
   main .new-user {
-    max-width: 80%;
+    max-width: 100%;
     padding: 0 1rem;
+  }
+
+  .create-account .input-area span {
+    left: 10%;
   }
 
   .basic-plane-announcement {
