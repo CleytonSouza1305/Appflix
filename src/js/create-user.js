@@ -193,7 +193,7 @@ async function registerReq(email, password, name, phone) {
   }
 }
 
-const token = localStorage.getItem('token')
+const token = localStorage.getItem('token');
 
 if (!token) {
   startApp();
@@ -203,15 +203,18 @@ if (!token) {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     }
-  }).then(response => {
-    if (response.ok) {
-      location.href = './browse.html';
-    } else {
+  })
+    .then(response => {
+      if (response.ok) {
+        startApp(token);
+      } else {
+        localStorage.removeItem('token');
+        location.href = './login.html';
+      }
+    })
+    .catch(error => {
+      console.error('Erro ao validar token:', error);
       localStorage.removeItem('token');
-      startApp();
-    }
-  }).catch(() => {
-    localStorage.removeItem('token');
-    startApp();
-  });
+      location.href = './login.html';
+    });
 }

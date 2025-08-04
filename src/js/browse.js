@@ -650,12 +650,45 @@ async function startApp(token) {
   verifyUser(token);
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+async function validateToken(token, path) {
+  const loader = document.getElementById("loading");
+  loader.classList.remove("display");
+
+  try {
+    const response = await fetch(
+      `https://appflix-api.onrender.com/api/profiles`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      location.href = path
+    }
+
+    return true;
+  } catch (e) {
+    console.error(`Erro ao validar token, motivo: ${e}`);
+    location.href = path;
+  } finally {
+    loader.classList.add("display");
+  }
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+
   const token = localStorage.getItem("token");
 
   if (!token) {
     location.href = "./login.html";
   } else {
-    startApp(token);
+    const isValidToken = await validateToken(token, './login.html')
+    if (isValidToken) {
+      startApp(token);
+    }
   }
 });

@@ -18,6 +18,7 @@ async function profileData(token, id) {
 
     if (!response.ok) {
       console.error(`Erro na requisição, motivo: ${data.message}`);
+      location.href = './login.html'
       return;
     }
 
