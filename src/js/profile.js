@@ -32,9 +32,7 @@ async function profileData(token, id) {
 
 async function startApp(token, profileId) {
   const data = await profileData(token, profileId)
-  const h1 = document.querySelector('h1')
-  h1.textContent = `Bem vindo, ${data.profile_name}`
-  console.log(data)
+  
 }
 
 async function validateToken(token, path) {
