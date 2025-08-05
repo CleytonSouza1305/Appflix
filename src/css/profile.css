@@ -5,6 +5,114 @@
   --gray-color: #5F5F5F;
 }
 
+body {
+  width: 100vw;
+  height: 100%;
+  position: relative;
+}
+
+header {
+  position: fixed; 
+  top: 0;
+  background-image: linear-gradient(bottom, var(--black-color), transparent);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  font-weight: 500;
+  color: #e5e5e5;
+  padding: 1.5rem 3.5rem 1rem;
+}
+
+header .left-navgation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3rem;
+}
+
+header .left-navgation ul {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+header .left-navgation ul li {
+  padding: 0.2rem 0.5rem;
+  transition: ease-in-out 200ms;
+}
+
+header .left-navgation ul li .inicio {
+  color: var(--white-color);
+}
+
+header .left-navgation ul li .link {
+  transition: ease-in-out 100ms;
+}
+
+header .left-navgation ul li .link:hover {
+  color: hsl(0, 0%, 80%);
+}
+
+.netflix-logo {
+  width: 130px;
+}
+
+.netflix-logo img {
+  width: 100%;
+}
+
+header .right-navgation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.1rem;
+}
+
+header .right-navgation #go-to-kids-profile {
+  cursor: pointer;
+}
+
+header .right-navgation .rigth-content i {
+  font-size: 1.4rem;
+}
+
+header .right-navgation .user-avatar {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+header .right-navgation .user-avatar .avatar {
+  width: 50px;
+  height: 50px;
+}
+
+header .right-navgation .user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 6px;
+}
+
+header .user-content {
+  position: relative;
+}
+
+header .user-data-content {
+  background-color: pink;
+  position: absolute;
+  top: 60px;
+  left: -150px;
+  width: 220px;
+  padding: 1rem;
+  border-radius: 4px;
+}
+
 .display {
   display: none;
 }
