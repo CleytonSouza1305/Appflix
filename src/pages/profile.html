@@ -1,67 +1,80 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="shortcut icon" href="../images/netflix-logo.png" type="image/x-icon">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
-  <link rel="stylesheet" href="../css/profile.css">
-  <link rel="stylesheet" href="../css/global.css">
-  <title>AppFlix | Home</title>
-</head>
-<body>
-  
-  <header>
-    <div class="left-navgation">
-      <div class="netflix-logo">
-        <img src="../images/netflix-image.png" alt="Logo da netflix">
-      </div>
-
-      <nav>
-        <ul>
-          <li><a class="inicio" href="#inicio">Inicio</a></li>
-          <li><a class="link" href="#">Série</a></li>
-          <li><a class="link" href="#">Filmes</a></li>
-          <li><a class="link" href="#">Bombando</a></li>
-          <li><a class="link" href="#">Minha lista</a></li>
-          <li><a class="link" href="#">Navegar por idioma</a></li>
-        </ul>
-      </nav>
-    </div>
-
-    <div class="right-navgation">
-      <div class="rigth-content">
-        <i class="fa-solid fa-magnifying-glass"></i>
-      </div>
-      <div class="rigth-content">
-        <span id="go-to-kids-profile">Infantil</span>
-      </div>
-      <div class="rigth-content">
-        <i class="fa-solid fa-bell"></i>
-      </div>
-
-      <div class="user-content">
-        <div class="user-avatar">
-        <div class="avatar">
-          <img id="avatar-image" src="" alt="Avatar de usuário">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="shortcut icon"
+      href="../images/netflix-logo.png"
+      type="image/x-icon"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../css/profile.css" />
+    <link rel="stylesheet" href="../css/global.css" />
+    <title>AppFlix | Home</title>
+  </head>
+  <body>
+    <header>
+      <div class="left-navgation">
+        <div class="netflix-logo">
+          <img src="../images/netflix-image.png" alt="Logo da netflix" />
         </div>
-        <i class="fa-solid fa-chevron-down"></i>
+
+        <nav class="desktop-nav">
+          <ul>
+            <li><a class="inicio" href="#inicio">Inicio</a></li>
+            <li><a class="link" href="#">Série</a></li>
+            <li><a class="link" href="#">Filmes</a></li>
+            <li><a class="link" href="#">Bombando</a></li>
+            <li><a class="link" href="#">Minha lista</a></li>
+            <li><a class="link" href="#">Navegar por idioma</a></li>
+          </ul>
+        </nav>
+
+        <nav class="mobile-nav">
+          <a class="inicio" href="#inicio" id="toggle-menu">Inicio</a>
+          <ul id="mobile-menu">
+            <li><a class="link" href="#">Série</a></li>
+            <li><a class="link" href="#">Filmes</a></li>
+            <li><a class="link" href="#">Bombando</a></li>
+            <li><a class="link" href="#">Minha lista</a></li>
+            <li><a class="link" href="#">Navegar por idioma</a></li>
+          </ul>
+        </nav>
       </div>
 
-      <div class="user-data-content display">
-        <h1>teste data</h1>
+      <div class="right-navgation">
+        <div class="rigth-content">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+        <div class="rigth-content">
+          <span id="go-to-kids-profile">Infantil</span>
+        </div>
+        <div class="rigth-content bell-content">
+          <i class="fa-solid fa-bell"></i>
+        </div>
+
+        <div class="user-content">
+          <div class="user-avatar">
+            <div class="avatar">
+              <img id="avatar-image" src="" alt="Avatar de usuário" />
+            </div>
+            <i class="fa-solid fa-chevron-down"></i>
+          </div>
+
+          <div class="user-data-content display"></div>
+        </div>
       </div>
-      </div>
-    </div>
-  </header>
+    </header>
 
-
-
-   <div class="loading-container display" id="loading">
+    <div class="loading-container display" id="loading">
       <div class="loader-wrapper">
         <div class="netflix-loading"></div>
       </div>
     </div>
-  <script src="../js/profile.js"></script>
-</body>
+    <script src="../js/profile.js"></script>
+  </body>
 </html>
