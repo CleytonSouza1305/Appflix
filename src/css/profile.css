@@ -1,18 +1,17 @@
 :root {
-  --primary-color: #E50914;
+  --primary-color: #e50914;
   --black-color: #000;
-  --white-color: #FFFFFF;
-  --gray-color: #5F5F5F;
+  --white-color: #ffffff;
+  --gray-color: #5f5f5f;
 }
 
 body {
   width: 100vw;
-  height: 100%;
   position: relative;
 }
 
 header {
-  position: fixed; 
+  position: fixed;
   top: 0;
   background-image: linear-gradient(bottom, var(--black-color), transparent);
   display: flex;
@@ -28,30 +27,30 @@ header .left-navgation {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 3rem;
+  gap: 1rem;
 }
 
-header .left-navgation ul {
+header .left-navgation .desktop-nav ul {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.8rem;
 }
 
-header .left-navgation ul li {
+header .left-navgation .desktop-nav ul li {
   padding: 0.2rem 0.5rem;
   transition: ease-in-out 200ms;
 }
 
-header .left-navgation ul li .inicio {
+header .left-navgation .desktop-nav ul li .inicio {
   color: var(--white-color);
 }
 
-header .left-navgation ul li .link {
+header .left-navgation .desktop-nav ul li .link {
   transition: ease-in-out 100ms;
 }
 
-header .left-navgation ul li .link:hover {
+header .left-navgation .desktop-nav ul li .link:hover {
   color: hsl(0, 0%, 80%);
 }
 
@@ -104,7 +103,8 @@ header .user-content {
 }
 
 header .user-data-content {
-  background-color: pink;
+  background-color: var(--black-color);
+  color: var(--white-color);
   position: absolute;
   top: 60px;
   left: -150px;
@@ -113,6 +113,111 @@ header .user-data-content {
   border-radius: 4px;
 }
 
+.user-data-content .content-profile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 1rem;
+  font-weight: 400;
+  font-size: 14px;
+}
+
+.user-data-content .content-profile .left-card-content img {
+  width: 35px;
+  height: 35px;
+  border-radius: 6px;
+  object-position: center;
+  object-fit: cover;
+}
+
+.user-data-content .content-profile .profile-card {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.content-profile .profile-card .left-card-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 50%;
+  gap: 0.5rem;
+}
+
+.content-profile .profile-card .right-card-content {
+  margin-right: 1.5rem;
+}
+
+.mobile-nav {
+  display: none;
+}
+
+#mobile-menu {
+  display: none;
+}
+
+#mobile-menu.active {
+  display: block;
+  position: absolute;
+  top: 80px;
+  left: 130px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: rgb(0, 0, 0, 0.6);
+  width: 250px;
+  text-align: center;
+}
+
+#mobile-menu.active li {
+  padding: 1rem;
+}
+
 .display {
   display: none;
+}
+
+@media (max-width: 1150px) {
+  .desktop-nav {
+    display: none;
+  }
+
+  .mobile-nav {
+    display: block;
+  }
+
+  .mobile-nav ul {
+    display: none;
+  }
+
+  .mobile-nav .inicio:hover ul {
+    display: block;
+  }
+}
+
+@media (max-width: 768px) {
+  header {
+    padding: 1.5rem 1.2rem 1rem;;
+  }
+
+  header .netflix-logo {
+    width: 100px;
+  }
+
+  header span#go-to-kids-profile,
+  header .bell-content,
+  header .fa-chevron-down {
+    display: none;
+  }
+
+  header .right-navgation {
+    gap: 0.7rem;
+  }
+
+  #mobile-menu.active {
+    left: 30px;
+  }
 }
