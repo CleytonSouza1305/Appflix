@@ -60,6 +60,96 @@ async function searchProfile(token) {
   }
 }
 
+function leaveNetflixFn() {
+  const leaveBtn = document.getElementById("leave-netflix-home");
+
+  leaveBtn.addEventListener("click", () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("profileId");
+    location.href = "./login.html";
+  });
+}
+
+function toggleProfile(id) {
+  localStorage.setItem('profileId', id);
+
+  location.reload()
+}
+
+function verifyPin(pin, profileId) {
+  const txtError = document.querySelector(".error-pin");
+  txtError.textContent = "";
+
+  const modal = document.querySelector(".modal-pin");
+  modal.classList.remove("display");
+
+  const pinInputs = modal.querySelectorAll(".pin-inputs input");
+
+  pinInputs[0].focus();
+
+  pinInputs.forEach((input) => {
+    input.value = "";
+
+    input.addEventListener("input", (ev) => {
+      const actualInput = ev.currentTarget;
+      const position = parseInt(actualInput.dataset.position);
+
+      if (actualInput.value.length === 1) {
+        const nextInput = document.querySelector(
+          `[data-position="${position + 1}"]`
+        );
+        if (nextInput) nextInput.focus();
+      }
+    });
+  });
+
+  modal.addEventListener("click", (ev) => {
+    if (ev.target.classList.contains("modal-pin")) {
+      modal.classList.add("display");
+    }
+  });
+
+  const sbmitBtn = document.getElementById("submitPin");
+  sbmitBtn.addEventListener("click", () => {
+    let digitedPassword = "";
+    pinInputs.forEach((pin) => (digitedPassword += pin.value));
+
+    if (digitedPassword !== pin) {
+      pinInputs.forEach((p) => (p.value = ""));
+      txtError.textContent = "Senha inválida.";
+      pinInputs[0].focus();
+    } else {
+      modal.classList.add("display");
+
+      toggleProfile(profileId)
+    }
+  });
+}
+
+function goToOtherProfile() {
+  const profileCards = document.querySelectorAll(".profile-card");
+
+  const token = localStorage.getItem("token");
+  if (!token) {
+    localStorage.removeItem("profileId");
+    location.href = "./login.html";
+    return;
+  }
+
+  profileCards.forEach((profile) => {
+    profile.addEventListener("click", async () => {
+      const profileId = profile.dataset.profileId;
+
+      const actualProfile = await profileData(token, profileId);
+      if (actualProfile.profile_pin) {
+        verifyPin(actualProfile.profile_pin, profileId);
+      } else {
+        toggleProfile(profileId);
+      }
+    });
+  });
+}
+
 function insertProfileData(data, allProfiles) {
   console.log(data);
   console.log(allProfiles);
@@ -69,16 +159,16 @@ function insertProfileData(data, allProfiles) {
   const avatarImage = document.getElementById("avatar-image");
   avatarImage.src = avatar;
 
-  const profiles = allProfiles.filter((profile) => profile.id !== data.id);
-  console.log(profiles);
-
   const content = document.querySelector(".user-data-content");
 
   const contentProfile = document.createElement("div");
   contentProfile.classList.add("content-profile");
 
+  const profiles = allProfiles.filter((profile) => profile.id !== data.id);
+
   for (let i = 0; i < profiles.length; i++) {
     const card = document.createElement("div");
+    card.dataset.profileId = profiles[i].id;
     card.classList.add("profile-card");
 
     const leftCardContent = document.createElement("div");
@@ -108,7 +198,23 @@ function insertProfileData(data, allProfiles) {
     contentProfile.append(card);
   }
 
-  content.append(contentProfile);
+  const bottomInfos = document.createElement("div");
+  bottomInfos.classList.add("bottom-infos");
+
+  const manageProfile = document.createElement("div");
+  manageProfile.innerHTML = `<i class="fa-solid fa-pencil"></i> <a href="./browse.html">Gerenciar perfil</a>`;
+  manageProfile.id = "manage-profile-home";
+
+  const leaveNetflix = document.createElement("a");
+  leaveNetflix.textContent = "Sair da Netflix";
+  leaveNetflix.id = "leave-netflix-home";
+
+  const buttonsDiv = document.createElement("div");
+  buttonsDiv.classList.add("buttons-bottom-info");
+
+  buttonsDiv.append(manageProfile, leaveNetflix);
+  bottomInfos.append(buttonsDiv);
+  content.append(contentProfile, bottomInfos);
 
   const contentAvatar = document.querySelector(".user-avatar");
 
@@ -153,6 +259,9 @@ function insertProfileData(data, allProfiles) {
       menu.classList.remove("active");
     }
   });
+
+  leaveNetflixFn();
+  goToOtherProfile()
 }
 
 async function startApp(token, profileId) {
