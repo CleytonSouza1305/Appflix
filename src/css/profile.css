@@ -8,12 +8,14 @@
 body {
   width: 100vw;
   position: relative;
+  overflow: hidden;
 }
 
 header {
+  z-index: 2;
   position: fixed;
   top: 0;
-  background-image: linear-gradient(bottom, var(--black-color), transparent);
+  background-image: linear-gradient(to bottom, var(--black-color), transparent);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -213,7 +215,7 @@ header .user-data-content {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.75);
+  background-color: rgba(0, 0, 0, 0.75);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -271,6 +273,72 @@ button#submitPin {
   color: var(--primary-color);
 }
 
+.movie-background {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  background-color: var(--black-color);
+  z-index: -1;
+}
+
+.movie-background img {
+  background-position: 50%;
+  background-size: cover;
+  bottom: 0;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+  filter: alpha(opacity=100);
+  left: 0;
+  opacity: 1;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: opacity 0.4s cubic-bezier(0.665, 0.235, 0.265, 0.8) 0s;
+  width: 100%;
+}
+
+#player {
+  position: fixed;   
+  top: 0;          
+  left: 0;          
+  width: 100vw;     
+  height: 100vh;    
+  z-index: -1;       
+  overflow: hidden;  
+  pointer-events: none;
+  transform: scale(1.1);
+  transform-origin: top center;
+}
+
+.movie-content {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+}
+
+.unmute-div {
+  position: absolute;
+  bottom: 5%;
+  right: 5%;
+  background-color: transparent;
+  border: 3px solid var(--white-color);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.unmute-div button {
+  font-size: 1.5rem;
+  color: var(--white-color);
+}
+
+
 .display {
   display: none;
 }
@@ -295,11 +363,20 @@ button#submitPin {
   #mobile-menu.active {
     left: 97px;
   }
+
+  .unmute-div {
+    right: 2%;
+    bottom: 15%;
+  }
+
+  #player {
+    height: 80vh;
+  }
 }
 
 @media (max-width: 768px) {
   header {
-    padding: 1.5rem 1.2rem 1rem;;
+    padding: 1.5rem 1.2rem 1rem;
   }
 
   header .netflix-logo {
@@ -319,4 +396,19 @@ button#submitPin {
   #mobile-menu.active {
     left: 30px;
   }
+
+  #player {
+    height: 30vh;
+  }
+
+  .unmute-div {
+    right: 2%;
+    top: 24%;
+    padding: 0.5rem;
+  }
+
+  .unmute-div button {
+  font-size: 1rem;
+  color: var(--white-color);
+}
 }
