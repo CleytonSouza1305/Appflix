@@ -243,7 +243,6 @@ async function insertTmdbVideo(apiKey, profileType) {
     }
 
     const videoKey = randomTrailer.key;
-    // const videoLink = `https://www.youtube.com/embed/${videoKey}?autoplay=1&mute=1&controls=0&loop=1`;
 
     let player;
 
@@ -287,6 +286,9 @@ async function insertTmdbVideo(apiKey, profileType) {
 
     console.log(randomTrailer);
   }
+
+  // COLOCAR ABAIXO TITULO E DESCRIÇÃO DO FILME
+  
 }
 
 async function insertProfileData(data, allProfiles) {
