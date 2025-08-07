@@ -71,9 +71,9 @@ function leaveNetflixFn() {
 }
 
 function toggleProfile(id) {
-  localStorage.setItem('profileId', id);
+  localStorage.setItem("profileId", id);
 
-  location.reload()
+  location.reload();
 }
 
 function verifyPin(pin, profileId) {
@@ -121,7 +121,7 @@ function verifyPin(pin, profileId) {
     } else {
       modal.classList.add("display");
 
-      toggleProfile(profileId)
+      toggleProfile(profileId);
     }
   });
 }
@@ -150,9 +150,33 @@ function goToOtherProfile() {
   });
 }
 
+function goToKidsProfile(data) {
+  const kidsProfiles = data.filter((kid) => kid.isKid === true);
+
+  if (kidsProfiles.length > 0) {
+    const btn = document.getElementById("go-to-kids-profile");
+    if (btn) {
+      btn.onclick = (ev) => {
+        const actualProfileId = localStorage.getItem('profileId')
+
+        let kidsProfile
+
+        if (kidsProfiles.length > 1) {
+          do {
+            kidsProfile = kidsProfiles[Math.floor(Math.random() * kidsProfiles.length)]
+          } while (actualProfileId === kidsProfile.id);
+        } else {
+          kidsProfile = kidsProfiles[0]
+        }
+        
+        localStorage.setItem('profileId', kidsProfile.id)
+        location.reload()
+      };
+    }
+  }
+}
+
 function insertProfileData(data, allProfiles) {
-  console.log(data);
-  console.log(allProfiles);
 
   const avatar = data.avatar_link;
 
@@ -261,7 +285,8 @@ function insertProfileData(data, allProfiles) {
   });
 
   leaveNetflixFn();
-  goToOtherProfile()
+  goToOtherProfile();
+  goToKidsProfile(allProfiles);
 }
 
 async function startApp(token, profileId) {
