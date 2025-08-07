@@ -5,10 +5,17 @@
   --gray-color: #5f5f5f;
 }
 
+@font-face {
+  font-family: 'Malow-Font';
+  src: url('../fonts/Malow.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
   width: 100vw;
   position: relative;
-  overflow: hidden;
+  overflow-y: hidden;
 }
 
 header {
@@ -371,6 +378,7 @@ button#submitPin {
 
   #player {
     height: 80vh;
+    pointer-events: auto;
   }
 }
 
