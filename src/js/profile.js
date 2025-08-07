@@ -157,27 +157,139 @@ function goToKidsProfile(data) {
     const btn = document.getElementById("go-to-kids-profile");
     if (btn) {
       btn.onclick = (ev) => {
-        const actualProfileId = localStorage.getItem('profileId')
+        const actualProfileId = localStorage.getItem("profileId");
 
-        let kidsProfile
+        let kidsProfile;
 
         if (kidsProfiles.length > 1) {
           do {
-            kidsProfile = kidsProfiles[Math.floor(Math.random() * kidsProfiles.length)]
+            kidsProfile =
+              kidsProfiles[Math.floor(Math.random() * kidsProfiles.length)];
           } while (actualProfileId === kidsProfile.id);
         } else {
-          kidsProfile = kidsProfiles[0]
+          kidsProfile = kidsProfiles[0];
         }
-        
-        localStorage.setItem('profileId', kidsProfile.id)
-        location.reload()
+
+        localStorage.setItem("profileId", kidsProfile.id);
+        location.reload();
       };
     }
   }
 }
 
-function insertProfileData(data, allProfiles) {
+async function tmdbApi(endpoint) {
+  const loader = document.getElementById("loading");
+  loader.classList.remove("display");
 
+  try {
+    const response = await fetch(endpoint);
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error(`Erro na requisição, motivo: ${data.message}`);
+      return;
+    }
+
+    return data;
+  } catch (e) {
+    console.error(`Erro ao executar requisição GET: ${e}`);
+  } finally {
+    loader.classList.add("display");
+  }
+}
+
+async function insertTmdbVideo(apiKey, profileType) {
+  let movie;
+
+  if (!profileType) {
+    const endpoint = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=pt-BR&page=1`;
+    const data = await tmdbApi(endpoint);
+
+    const results = data.results;
+
+    movie = results[Math.floor(Math.random() * results.length)];
+  } else {
+    const endpoint = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=${16}&language=pt-BR&page=1`;
+    const data = await tmdbApi(endpoint);
+
+    const results = data.results;
+
+    movie = results[Math.floor(Math.random() * results.length)];
+  }
+
+  const endpoint = `https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=${apiKey}&language=pt-BR`;
+
+  const video = await tmdbApi(endpoint);
+
+  const backgroundContent = document.querySelector(".movie-background");
+
+  if (video.results.length < 1) {
+    if (movie.backdrop_path) {
+      const movieImageUrl = `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`;
+      backgroundContent.innerHTML = `<img src="${movieImageUrl}" alt="${movie.title}" />`;
+    } else {
+      backgroundContent.innerHTML = `<p>Sem imagem disponível</p>`;
+    }
+  } else {
+    const trailers = video.results.filter((vid) => vid.site === "YouTube");
+
+    let randomTrailer;
+
+    if (trailers.length > 1) {
+      randomTrailer = trailers[Math.floor(Math.random() * trailers.length)];
+    } else {
+      randomTrailer = trailers[0];
+    }
+
+    const videoKey = randomTrailer.key;
+    // const videoLink = `https://www.youtube.com/embed/${videoKey}?autoplay=1&mute=1&controls=0&loop=1`;
+
+    let player;
+
+    function onYouTubeIframeAPIReady() {
+      if (!videoKey) return;
+
+      player = new YT.Player("player", {
+        height: "360",
+        width: "640",
+        videoId: videoKey,
+        playerVars: {
+          autoplay: 1,
+          controls: 0,
+          mute: 1,
+          loop: 1,
+          playlist: videoKey,
+        },
+        events: {
+          onReady: onPlayerReady,
+        },
+      });
+    }
+
+    if (typeof YT !== "undefined" && YT.Player) {
+      onYouTubeIframeAPIReady();
+    }
+
+    function onPlayerReady(event) {
+      const unmuteButton = document.querySelector(".unmute-div");
+
+      if (unmuteButton) {
+        unmuteButton.addEventListener("click", () => {
+          if (player.isMuted()) {
+            player.unMute();
+          } else {
+            player.mute();
+          }
+        });
+      }
+    }
+
+    console.log(randomTrailer);
+  }
+}
+
+async function insertProfileData(data, allProfiles) {
   const avatar = data.avatar_link;
 
   const avatarImage = document.getElementById("avatar-image");
@@ -287,6 +399,9 @@ function insertProfileData(data, allProfiles) {
   leaveNetflixFn();
   goToOtherProfile();
   goToKidsProfile(allProfiles);
+
+  const apiKeyTmdb = "1bba4a82f9810b816a081e47cde96c2b";
+  await insertTmdbVideo(apiKeyTmdb, data.is_kid);
 }
 
 async function startApp(token, profileId) {
