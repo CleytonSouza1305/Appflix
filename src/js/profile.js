@@ -199,6 +199,25 @@ async function tmdbApi(endpoint) {
   }
 }
 
+function createHtmlElement(element, className, id) {
+  const elementHtml = document.createElement(element);
+
+  if (className) {
+    const classArr = className.split(",");
+
+    classArr.forEach((clss) => {
+      const classNoSpace = clss.trim();
+      elementHtml.classList.add(classNoSpace);
+    });
+  }
+
+  if (id) {
+    elementHtml.id = id;
+  }
+
+  return elementHtml;
+}
+
 async function insertTmdbVideo(apiKey, profileType) {
   let movie;
 
@@ -206,17 +225,19 @@ async function insertTmdbVideo(apiKey, profileType) {
     const endpoint = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=pt-BR&page=1`;
     const data = await tmdbApi(endpoint);
 
-    const results = data.results;
+    const results = data.results.filter(m => m.overview && m.overview.trim().length > 0)
 
     movie = results[Math.floor(Math.random() * results.length)];
   } else {
     const endpoint = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=${16}&language=pt-BR&page=1`;
     const data = await tmdbApi(endpoint);
 
-    const results = data.results;
+    const results = data.results.filter(m => m.overview && m.overview.trim().length > 0)
 
     movie = results[Math.floor(Math.random() * results.length)];
   }
+
+  console.log(movie);
 
   const endpoint = `https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=${apiKey}&language=pt-BR`;
 
@@ -227,11 +248,23 @@ async function insertTmdbVideo(apiKey, profileType) {
   if (video.results.length < 1) {
     if (movie.backdrop_path) {
       const movieImageUrl = `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`;
-      backgroundContent.innerHTML = `<img src="${movieImageUrl}" alt="${movie.title}" />`;
+      backgroundContent.innerHTML = `<img src="${movieImageUrl}" alt="${movie.title}" />
+                                     <div class="movie-data-info"></div>`;
+
+      backgroundContent.style.zIndex = 1;
     } else {
       backgroundContent.innerHTML = `<p>Sem imagem disponível</p>`;
     }
+
+    const unmuteDiv = document.querySelector('.unmute-div')
+    unmuteDiv.style.display = 'none'
+
+    const movieContent = document.querySelector('.movie-content')
+    movieContent.style.display = 'none'
   } else {
+    const movieImageContent = document.querySelector('.movie-background')
+    movieImageContent.style.display = 'none'
+    
     const trailers = video.results.filter((vid) => vid.site === "YouTube");
 
     let randomTrailer;
@@ -259,6 +292,9 @@ async function insertTmdbVideo(apiKey, profileType) {
           mute: 1,
           loop: 1,
           playlist: videoKey,
+          rel: 0,
+          modestbranding: 1,
+          fs: 0,
         },
         events: {
           onReady: onPlayerReady,
@@ -287,8 +323,38 @@ async function insertTmdbVideo(apiKey, profileType) {
     console.log(randomTrailer);
   }
 
-  // COLOCAR ABAIXO TITULO E DESCRIÇÃO DO FILME
-  
+  const dataInfoCOntent = document.querySelector(".movie-data-info");
+
+  const title = createHtmlElement("h2", "movie-title");
+  title.innerText = movie.title;
+
+  const overview = createHtmlElement("p", "overview");
+
+  let overviewTxt = movie.overview;
+
+  if (overviewTxt.length > 260) {
+    overviewTxt = overviewTxt.slice(0, 260) + "...";
+  }
+
+  overview.innerText = overviewTxt;
+
+  const playBtn = createHtmlElement("button", "play-btn", "play-" + movie.id);
+  const moreInfoBtn = createHtmlElement(
+    "button",
+    "infos-btn",
+    "info-" + movie.id
+  );
+
+  const playIcon = createHtmlElement("i", "fa-solid, fa-play");
+  const moreIcon = createHtmlElement("i", "fa-solid, fa-circle-info");
+
+  playBtn.append(playIcon, "Assistir");
+  moreInfoBtn.append(moreIcon, "Mais informações");
+
+  const divBtns = createHtmlElement("div", "div-data-buttons");
+
+  divBtns.append(playBtn, moreInfoBtn);
+  dataInfoCOntent.append(title, overview, divBtns);
 }
 
 async function insertProfileData(data, allProfiles) {
