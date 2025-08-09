@@ -484,4 +484,24 @@ button#submitPin {
     width: 100%;
     height: 30vh;
   }
+
+  .movie-data-info .overview {
+    display: none;
+  }
+
+  .movie-data-info h2 {
+    font-size: 1.5rem;
+    width: 100%;
+  }
+
+  .movie-data-info .div-data-buttons button {
+    padding: 0.5rem 1rem;
+    color: var(--gray-color);
+    background-color: var(--white-color);
+    border-radius: 6px;
+    font-size: .8rem;
+    margin-right: 0.3rem;
+    font-weight: 500;
+    transition: ease-in-out 100ms;
+  }
 }
