@@ -315,24 +315,6 @@ async function insertTmdbVideo(apiKey, profileType) {
     function onPlayerReady(event) {
       const unmuteButton = document.querySelector(".unmute-div");
 
-      const movieContent = document.querySelector(".movie-content");
-      if (movieContent) {
-        movieContent.onclick = () => {
-          const state = player.getPlayerState();
-
-          console.log(state);
-          if (state === 2) {
-            player.playVideo();
-          }
-
-          if (player.isMuted()) {
-            player.unMute();
-          } else {
-            player.mute();
-          }
-        };
-      }
-
       if (unmuteButton) {
         unmuteButton.addEventListener("click", () => {
           if (player.isMuted()) {
