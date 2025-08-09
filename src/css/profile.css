@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=TikTok+Sans:opsz,wght@12..36,300..900&display=swap');
+
 :root {
   --primary-color: #e50914;
   --black-color: #000;
@@ -6,8 +8,8 @@
 }
 
 @font-face {
-  font-family: 'Malow-Font';
-  src: url('../fonts/Malow.ttf') format('truetype');
+  font-family: "Malow-Font";
+  src: url("../fonts/Malow.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -281,13 +283,9 @@ button#submitPin {
 }
 
 .movie-background {
-  bottom: 0;
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-  background-color: var(--black-color);
-  z-index: -1;
+  width: 100Vw;
+  height: 100vh;
+  position: relative;
 }
 
 .movie-background img {
@@ -303,51 +301,116 @@ button#submitPin {
   top: 0;
   transition: opacity 0.4s cubic-bezier(0.665, 0.235, 0.265, 0.8) 0s;
   width: 100%;
-}
-
-iframe#player {
-  position: absolute;  
-  top: 0;          
-  left: 0;          
-  width: 100vw;     
-  height: 100vh;    
-  z-index: -1;       
-  pointer-events: none;
-  transform: scale(1.1);
-  transform-origin: top center;
+  height: 100%;
 }
 
 .movie-content {
-  position: relative;
-  overflow: hidden;
-  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: transparent;
   height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
 }
 
-.unmute-div {
+.movie-content #player {
+  width: 100%;
+  height: 100vh;
+  pointer-events: none;
+  transform: scale(1.1);
+}
+
+.movie-content .unmute-div {
   position: absolute;
-  bottom: 5%;
-  right: 5%;
+  right: 60px;
+  bottom: 80px;
+  width: 40px;
+  height: 40px;
   background-color: transparent;
   border: 3px solid var(--white-color);
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  padding: 1.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  z-index: 2;
 }
 
-.unmute-div button {
-  font-size: 1.5rem;
+.movie-content .unmute-div button {
   color: var(--white-color);
 }
 
+.movie-content .infos {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  bottom: 0;
+  z-index: inherit;
+}
+
+.movie-data-info {
+  position: relative;
+  color: var(--white-color);
+  background-image: linear-gradient(90deg, rgb(0, 0, 0, 0.7), rgb(0, 0, 0, 0.5), transparent);
+  height: 100%;
+  width: 100%;
+  padding-left: 5%;
+  padding-top: 10%;
+  top: 0;
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.movie-data-info h2 {
+  font-family: Malow-Font, sans-serif;
+  font-size: 3.5rem;
+  width: 600px;
+}
+
+.movie-data-info .overview {
+  font-family: "Poppins", sans-serif;
+  width: 600px;
+  line-height: 1.6;
+  font-size: 1.1rem;
+}
+
+.movie-data-info .div-data-buttons {
+  width: 100%;
+}
+
+.movie-data-info .div-data-buttons button {
+  padding: 0.7rem 1.5rem;
+  color: var(--gray-color);
+  background-color: var(--white-color);
+  border-radius: 6px;
+  font-size: 1.5rem;
+  margin-right: 0.8rem;
+  font-weight: 500;
+  transition: ease-in-out 100ms;
+}
+
+.movie-data-info .div-data-buttons button.play-btn:hover {
+  background-color: rgb(255, 255, 255, 0.7);
+} 
+
+.movie-data-info .div-data-buttons button.infos-btn {
+  background-color: rgba(109, 109, 110, 0.7);
+  color: var(--white-color);
+}
+
+.movie-data-info .div-data-buttons button.infos-btn:hover {
+  background-color: rgb(255, 255, 255, 0.3);
+}
+
+.movie-data-info .div-data-buttons button i {
+  margin-right: 16px;
+}
 
 .display {
   display: none;
@@ -374,14 +437,19 @@ iframe#player {
     left: 97px;
   }
 
-  .unmute-div {
-    right: 2%;
-    bottom: 15%;
+  .movie-content {
+    height: 80vh;
   }
 
-  #player {
+  .movie-content #player {
+    width: 100%;
     height: 80vh;
     pointer-events: auto;
+  }
+
+  .movie-content .unmute-div {
+    right: 20px;
+    bottom: 60px;
   }
 }
 
@@ -408,18 +476,12 @@ iframe#player {
     left: 30px;
   }
 
-  #player {
+  .movie-content {
     height: 30vh;
   }
 
-  .unmute-div {
-    right: 2%;
-    top: 24%;
-    padding: 0.5rem;
+  .movie-content #player {
+    width: 100%;
+    height: 30vh;
   }
-
-  .unmute-div button {
-  font-size: 1rem;
-  color: var(--white-color);
-}
 }
