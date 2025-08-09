@@ -225,14 +225,18 @@ async function insertTmdbVideo(apiKey, profileType) {
     const endpoint = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=pt-BR&page=1`;
     const data = await tmdbApi(endpoint);
 
-    const results = data.results.filter(m => m.overview && m.overview.trim().length > 0)
+    const results = data.results.filter(
+      (m) => m.overview && m.overview.trim().length > 0
+    );
 
     movie = results[Math.floor(Math.random() * results.length)];
   } else {
     const endpoint = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=${16}&language=pt-BR&page=1`;
     const data = await tmdbApi(endpoint);
 
-    const results = data.results.filter(m => m.overview && m.overview.trim().length > 0)
+    const results = data.results.filter(
+      (m) => m.overview && m.overview.trim().length > 0
+    );
 
     movie = results[Math.floor(Math.random() * results.length)];
   }
@@ -256,15 +260,15 @@ async function insertTmdbVideo(apiKey, profileType) {
       backgroundContent.innerHTML = `<p>Sem imagem disponível</p>`;
     }
 
-    const unmuteDiv = document.querySelector('.unmute-div')
-    unmuteDiv.style.display = 'none'
+    const unmuteDiv = document.querySelector(".unmute-div");
+    unmuteDiv.style.display = "none";
 
-    const movieContent = document.querySelector('.movie-content')
-    movieContent.style.display = 'none'
+    const movieContent = document.querySelector(".movie-content");
+    movieContent.style.display = "none";
   } else {
-    const movieImageContent = document.querySelector('.movie-background')
-    movieImageContent.style.display = 'none'
-    
+    const movieImageContent = document.querySelector(".movie-background");
+    movieImageContent.style.display = "none";
+
     const trailers = video.results.filter((vid) => vid.site === "YouTube");
 
     let randomTrailer;
@@ -295,6 +299,8 @@ async function insertTmdbVideo(apiKey, profileType) {
           rel: 0,
           modestbranding: 1,
           fs: 0,
+          controls: 1, 
+          showinfo: 0,
         },
         events: {
           onReady: onPlayerReady,
@@ -308,6 +314,24 @@ async function insertTmdbVideo(apiKey, profileType) {
 
     function onPlayerReady(event) {
       const unmuteButton = document.querySelector(".unmute-div");
+
+      const movieContent = document.querySelector(".movie-content");
+      if (movieContent) {
+        movieContent.onclick = () => {
+          const state = player.getPlayerState();
+
+          console.log(state);
+          if (state === 2) {
+            player.playVideo();
+          }
+
+          if (player.isMuted()) {
+            player.unMute();
+          } else {
+            player.mute();
+          }
+        };
+      }
 
       if (unmuteButton) {
         unmuteButton.addEventListener("click", () => {
