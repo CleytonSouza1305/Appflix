@@ -350,16 +350,21 @@ async function seeMovieInfos(apiKey, movieId) {
       genreContent.append(genre);
     }
 
-    const revenueFormatted = new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-      minimumFractionDigits: 0,
-    }).format(movie.revenue);
+    rightInfoMid.append(genreContent);
 
-    const revenue = createHtmlElement("p", "movie-revenue");
-    revenue.innerText = `Bilheteria: ${revenueFormatted}`;
+    if (movie.revenue) {
+      const revenueFormatted = new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+        minimumFractionDigits: 0,
+      }).format(movie.revenue);
 
-    rightInfoMid.append(genreContent, revenue);
+      const revenue = createHtmlElement("p", "movie-revenue");
+      revenue.innerText = `Bilheteria: ${revenueFormatted}`;
+
+      rightInfoMid.append(revenue);
+    }
+
     contentMid.append(leftInfoMid, rightInfoMid);
     content.append(contentTop, contentMid);
 
