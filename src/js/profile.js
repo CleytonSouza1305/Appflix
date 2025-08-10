@@ -218,6 +218,83 @@ function createHtmlElement(element, className, id) {
   return elementHtml;
 }
 
+async function seeMovieInfos(apiKey, movieId) {
+  const endpoint = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}&language=pt-BR`;
+  const movie = await tmdbApi(endpoint);
+
+  if (movie) {
+    const modal = document.querySelector(".movie-info-modal");
+    modal.classList.remove("display");
+
+    const contentTop = createHtmlElement("div", "movie-info-content-top");
+
+    const cancelDiv = createHtmlElement("div", "cancel-content-top");
+    const cancelIcon = createHtmlElement("i", "fa-solid, fa-x");
+
+    cancelDiv.append(cancelIcon);
+
+    const div = createHtmlElement("div", "movie-info-background");
+    const image = createHtmlElement("img", "movie-image");
+
+    const movieImageUrl = `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`;
+    image.src = movieImageUrl;
+
+    const dataContent = createHtmlElement("div", "movie-data");
+
+    const movieTitle = createHtmlElement("p", "movie-title");
+    movieTitle.textContent = movie.title;
+
+    const modalButtons = createHtmlElement("div", "modal-buttons");
+
+    const playBtn = createHtmlElement("button", "play-btn", "play-" + movie.id);
+    const playIcon = createHtmlElement("i", "fa-solid, fa-play");
+    playBtn.append(playIcon, "Assistir");
+
+    const plusBtn = createHtmlElement(
+      "button",
+      "save-in-list",
+      "save-" + movie.id
+    );
+    const plusIcon = createHtmlElement("i", "fa-solid, fa-plus");
+    plusBtn.append(plusIcon);
+
+    const likeBtn = createHtmlElement(
+      "button",
+      "like-movie",
+      "like-" + movie.id
+    );
+    const likeIcon = createHtmlElement("i", "fa-regular, fa-thumbs-up");
+    likeBtn.append(likeIcon);
+
+    modalButtons.append(playBtn, plusBtn, likeBtn);
+
+    const content = modal.querySelector(".infos-modal");
+    content.innerHTML = ``;
+
+    div.append(image);
+    dataContent.append(movieTitle, modalButtons);
+    contentTop.append(cancelDiv, div, dataContent);
+    content.append(contentTop);
+
+    modal.addEventListener('click', (ev) => {
+      const element = ev.target
+
+      if (element === modal) {
+        modal.classList.add("display");
+      }
+    })
+
+    if (!modal.classList.contains("display")) {
+      const cancelBtn = document.querySelector(".cancel-content-top");
+      cancelBtn.addEventListener("click", () => {
+        modal.classList.add("display");
+      });
+    }
+
+    console.log(movie);
+  }
+}
+
 async function insertTmdbVideo(apiKey, profileType) {
   let movie;
 
@@ -299,7 +376,7 @@ async function insertTmdbVideo(apiKey, profileType) {
           rel: 0,
           modestbranding: 1,
           fs: 0,
-          controls: 1, 
+          controls: 1,
           showinfo: 0,
         },
         events: {
@@ -325,8 +402,6 @@ async function insertTmdbVideo(apiKey, profileType) {
         });
       }
     }
-
-    console.log(randomTrailer);
   }
 
   const dataInfoCOntent = document.querySelector(".movie-data-info");
@@ -361,6 +436,15 @@ async function insertTmdbVideo(apiKey, profileType) {
 
   divBtns.append(playBtn, moreInfoBtn);
   dataInfoCOntent.append(title, overview, divBtns);
+  console.log(moreInfoBtn);
+  if (moreInfoBtn) {
+    moreInfoBtn.addEventListener("click", (el) => {
+      const element = el.currentTarget;
+      const movieId = element.id.split("-")[1];
+
+      seeMovieInfos(apiKey, movieId);
+    });
+  }
 }
 
 async function insertProfileData(data, allProfiles) {
