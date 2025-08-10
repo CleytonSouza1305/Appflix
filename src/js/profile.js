@@ -320,7 +320,7 @@ async function seeMovieInfos(apiKey, movieId) {
     }
 
     overview.innerText = overviewTxt;
-    bottomData.append(overview)
+    bottomData.append(overview);
 
     leftInfoMid.append(topData, bottomData);
 
@@ -328,30 +328,29 @@ async function seeMovieInfos(apiKey, movieId) {
     const movieTime = createHtmlElement("p", "movie-time");
 
     if (movie.runtime) {
-      const hour = Math.floor(movie.runtime / 60)
-      const minuts = movie.runtime % 60
+      const hour = Math.floor(movie.runtime / 60);
+      const minuts = movie.runtime % 60;
 
       if (hour > 0) {
-        movieTime.innerText = `Tempo de exibição: ${hour}h${minuts}m`
+        movieTime.innerText = `Tempo de exibição: ${hour}h${minuts}m`;
       } else {
-        movieTime.innerText = `Tempo de exibição: ${minuts}m`
+        movieTime.innerText = `Tempo de exibição: ${minuts}m`;
       }
-      
-      rightInfoMid.append(movieTime)
+
+      rightInfoMid.append(movieTime);
     }
 
-    const genreContent = createHtmlElement("div", "genre-content")
+    const genreContent = createHtmlElement("div", "genre-content");
 
-    const genres = movie.genres
+    const genres = movie.genres;
     for (let i = 0; i < genres.length; i++) {
-     const genre = createHtmlElement("span", "genre-span")
-     genre.innerText = genres[i].name
+      const genre = createHtmlElement("span", "genre-span");
+      genre.innerText = genres[i].name;
 
-     genreContent.append(genre)
+      genreContent.append(genre);
     }
 
-
-    rightInfoMid.append(genreContent)
+    rightInfoMid.append(genreContent);
     contentMid.append(leftInfoMid, rightInfoMid);
     content.append(contentTop, contentMid);
 
@@ -473,10 +472,13 @@ async function insertTmdbVideo(apiKey, profileType) {
 
       if (unmuteButton) {
         unmuteButton.addEventListener("click", () => {
+          const state = player.getPlayerState();
+
+          if (state === 2 || state === 5) {
+            player.playVideo();
+          }
+
           if (player.isMuted()) {
-            if (player.getPlayerState() === 2) {
-              player.playVideo()
-            }
             player.unMute();
           } else {
             player.mute();
