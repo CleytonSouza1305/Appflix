@@ -218,8 +218,8 @@ function createHtmlElement(element, className, id) {
   return elementHtml;
 }
 
-async function seeMovieInfos(apiKey, movieId) {
-  const endpoint = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}&language=pt-BR`;
+async function seeMovieInfos(apiKey, movieId, movieType) {
+  const endpoint = `https://api.themoviedb.org/3/${movieType}/${movieId}?api_key=${apiKey}&language=pt-BR`;
   const movie = await tmdbApi(endpoint);
 
   if (movie) {
@@ -242,7 +242,12 @@ async function seeMovieInfos(apiKey, movieId) {
     const dataContent = createHtmlElement("div", "movie-data");
 
     const movieTitle = createHtmlElement("p", "movie-title");
-    movieTitle.textContent = movie.title;
+
+    if (movie.title) {
+      movieTitle.textContent = movie.title;
+    } else {
+      movieTitle.textContent = movie.name;
+    }
 
     const modalButtons = createHtmlElement("div", "modal-buttons");
 
@@ -283,12 +288,22 @@ async function seeMovieInfos(apiKey, movieId) {
     const topData = createHtmlElement("div", "top-data-mid");
 
     const releaseDate = createHtmlElement("p", "release-date");
-    const date = new Date(movie.release_date);
-    releaseDate.innerText = date.toLocaleDateString("pt-BR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
+
+    if (movie.release_date) {
+      const date = new Date(movie.release_date);
+      releaseDate.innerText = date.toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
+    } else {
+      const date = new Date(movie.first_air_date);
+      releaseDate.innerText = date.toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
+    }
 
     const voteContent = createHtmlElement("div", "vote-content");
     const votesNumeric = Math.floor(movie.vote_average / 2);
@@ -338,6 +353,15 @@ async function seeMovieInfos(apiKey, movieId) {
       }
 
       rightInfoMid.append(movieTime);
+    } else {
+      const seasons = createHtmlElement("p", "season-content");
+      if (movie.seasons.length > 1) {
+        seasons.textContent = `${movie.seasons.length} temporadas`;
+        rightInfoMid.append(seasons);
+      } else {
+        seasons.textContent = `${movie.seasons.length} temporada`;
+        rightInfoMid.append(seasons);
+      }
     }
 
     const genreContent = createHtmlElement("div", "genre-content");
@@ -389,9 +413,11 @@ async function seeMovieInfos(apiKey, movieId) {
 
 async function insertTmdbVideo(apiKey, profileType) {
   let movie;
+  const videoType = [{ type: "movie" }, { type: "tv" }];
+  const randomType = videoType[Math.floor(Math.random() * videoType.length)];
 
   if (!profileType) {
-    const endpoint = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=pt-BR&page=1`;
+    const endpoint = `https://api.themoviedb.org/3/${randomType.type}/popular?api_key=${apiKey}&language=pt-BR&page=1`;
     const data = await tmdbApi(endpoint);
 
     const results = data.results.filter(
@@ -400,7 +426,9 @@ async function insertTmdbVideo(apiKey, profileType) {
 
     movie = results[Math.floor(Math.random() * results.length)];
   } else {
-    const endpoint = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=${16}&language=pt-BR&page=1`;
+    const endpoint = `https://api.themoviedb.org/3/discover/${
+      randomType.type
+    }?api_key=${apiKey}&with_genres=${16}&language=pt-BR&page=1`;
     const data = await tmdbApi(endpoint);
 
     const results = data.results.filter(
@@ -412,13 +440,13 @@ async function insertTmdbVideo(apiKey, profileType) {
 
   console.log(movie);
 
-  const endpoint = `https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=${apiKey}&language=pt-BR`;
+  const endpoint = `https://api.themoviedb.org/3/${randomType.type}/${movie.id}/videos?api_key=${apiKey}&language=pt-BR`;
 
-  const video = await tmdbApi(endpoint);
+  let video = await tmdbApi(endpoint);
 
   const backgroundContent = document.querySelector(".movie-background");
 
-  if (video.results.length < 1) {
+  if (video && video.results.length < 1) {
     if (movie.backdrop_path) {
       const movieImageUrl = `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`;
       backgroundContent.innerHTML = `<img src="${movieImageUrl}" alt="${movie.title}" />
@@ -438,7 +466,15 @@ async function insertTmdbVideo(apiKey, profileType) {
     const movieImageContent = document.querySelector(".movie-background");
     movieImageContent.style.display = "none";
 
-    const trailers = video.results.filter((vid) => vid.site === "YouTube");
+    const validTypes = ["Trailer", "Teaser", "Clip", "Featurette"];
+    const trailers = video.results.filter(
+      (vid) => vid.site === "YouTube" && validTypes.includes(vid.type)
+    );
+
+    if (trailers.length < 1) {
+      window.location.reload()
+      return
+    }
 
     let randomTrailer;
 
@@ -505,7 +541,11 @@ async function insertTmdbVideo(apiKey, profileType) {
   const dataInfoCOntent = document.querySelector(".movie-data-info");
 
   const title = createHtmlElement("h2", "movie-title");
-  title.innerText = movie.title;
+  if (movie.title) {
+    title.innerText = movie.title;
+  } else {
+    title.innerText = movie.name;
+  }
 
   const overview = createHtmlElement("p", "overview");
 
@@ -540,7 +580,7 @@ async function insertTmdbVideo(apiKey, profileType) {
       const element = el.currentTarget;
       const movieId = element.id.split("-")[1];
 
-      seeMovieInfos(apiKey, movieId);
+      seeMovieInfos(apiKey, movieId, randomType.type);
     });
   }
 }
