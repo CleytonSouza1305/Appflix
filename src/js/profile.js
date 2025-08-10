@@ -350,7 +350,16 @@ async function seeMovieInfos(apiKey, movieId) {
       genreContent.append(genre);
     }
 
-    rightInfoMid.append(genreContent);
+    const revenueFormatted = new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+      minimumFractionDigits: 0,
+    }).format(movie.revenue);
+
+    const revenue = createHtmlElement("p", "movie-revenue");
+    revenue.innerText = `Bilheteria: ${revenueFormatted}`;
+
+    rightInfoMid.append(genreContent, revenue);
     contentMid.append(leftInfoMid, rightInfoMid);
     content.append(contentTop, contentMid);
 
