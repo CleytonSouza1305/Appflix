@@ -474,6 +474,9 @@ async function insertTmdbVideo(apiKey, profileType) {
       if (unmuteButton) {
         unmuteButton.addEventListener("click", () => {
           if (player.isMuted()) {
+            if (player.getPlayerState() === 2) {
+              player.playVideo()
+            }
             player.unMute();
           } else {
             player.mute();
