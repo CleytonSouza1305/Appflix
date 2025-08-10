@@ -263,6 +263,7 @@ async function seeMovieInfos(apiKey, movieId) {
       "like-movie",
       "like-" + movie.id
     );
+
     const likeIcon = createHtmlElement("i", "fa-regular, fa-thumbs-up");
     likeBtn.append(likeIcon);
 
@@ -274,15 +275,93 @@ async function seeMovieInfos(apiKey, movieId) {
     div.append(image);
     dataContent.append(movieTitle, modalButtons);
     contentTop.append(cancelDiv, div, dataContent);
-    content.append(contentTop);
 
-    modal.addEventListener('click', (ev) => {
-      const element = ev.target
+    const contentMid = createHtmlElement("div", "content-mid");
+
+    const leftInfoMid = createHtmlElement("div", "left-info-mid");
+
+    const topData = createHtmlElement("div", "top-data-mid");
+
+    const releaseDate = createHtmlElement("p", "release-date");
+    const date = new Date(movie.release_date);
+    releaseDate.innerText = date.toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+
+    const voteContent = createHtmlElement("div", "vote-content");
+    const votesNumeric = Math.floor(movie.vote_average / 2);
+
+    const voteStars = createHtmlElement("div", "vote-stars");
+
+    for (let i = 0; i < 5; i++) {
+      if (i < votesNumeric) {
+        const star = createHtmlElement("i", "fa-solid, fa-star");
+        voteStars.append(star);
+      } else {
+        const star = createHtmlElement("i", "fa-regular, fa-star");
+        voteStars.append(star);
+      }
+    }
+
+    voteContent.append(votesNumeric + ".0", voteStars);
+
+    topData.append(releaseDate, voteContent);
+
+    const bottomData = createHtmlElement("div", "bottom-data-mid");
+
+    const overview = createHtmlElement("p", "overview");
+
+    let overviewTxt = movie.overview;
+
+    if (overviewTxt.length > 200) {
+      overviewTxt = overviewTxt.slice(0, 200) + "...";
+    }
+
+    overview.innerText = overviewTxt;
+    bottomData.append(overview)
+
+    leftInfoMid.append(topData, bottomData);
+
+    const rightInfoMid = createHtmlElement("div", "right-info-mid");
+    const movieTime = createHtmlElement("p", "movie-time");
+
+    if (movie.runtime) {
+      const hour = Math.floor(movie.runtime / 60)
+      const minuts = movie.runtime % 60
+
+      if (hour > 0) {
+        movieTime.innerText = `Tempo de exibição: ${hour}h${minuts}m`
+      } else {
+        movieTime.innerText = `Tempo de exibição: ${minuts}m`
+      }
+      
+      rightInfoMid.append(movieTime)
+    }
+
+    const genreContent = createHtmlElement("div", "genre-content")
+
+    const genres = movie.genres
+    for (let i = 0; i < genres.length; i++) {
+     const genre = createHtmlElement("span", "genre-span")
+     genre.innerText = genres[i].name
+
+     genreContent.append(genre)
+    }
+
+
+    rightInfoMid.append(genreContent)
+    contentMid.append(leftInfoMid, rightInfoMid);
+    content.append(contentTop, contentMid);
+
+    modal.addEventListener("click", (ev) => {
+      const element = ev.target;
 
       if (element === modal) {
         modal.classList.add("display");
       }
-    })
+    });
 
     if (!modal.classList.contains("display")) {
       const cancelBtn = document.querySelector(".cancel-content-top");
@@ -436,7 +515,7 @@ async function insertTmdbVideo(apiKey, profileType) {
 
   divBtns.append(playBtn, moreInfoBtn);
   dataInfoCOntent.append(title, overview, divBtns);
-  console.log(moreInfoBtn);
+
   if (moreInfoBtn) {
     moreInfoBtn.addEventListener("click", (el) => {
       const element = el.currentTarget;
