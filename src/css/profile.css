@@ -608,7 +608,7 @@ button#submitPin {
 }
 
 .infos-modal .content-mid .right-info-mid {
-  width: 30%;
+  width: 35%;
   height: 100%;
   display: flex;
   align-items: flex-start;
@@ -623,6 +623,61 @@ button#submitPin {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.5rem 2rem;
+}
+
+.season-container .all-seasons-content::-webkit-scrollbar {
+  width: 5px; 
+  height: 10px;
+}
+
+.season-container .all-seasons-content::-webkit-scrollbar-track {
+  background: transparent; 
+}
+
+.season-container .all-seasons-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 0, 0, 0.8); 
+  border-radius: 999px;
+  
+  border: 3px solid transparent; 
+  background-clip: padding-box
+}
+
+.season-container .all-seasons-content::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-color);
+}
+
+.content-mid .right-info-mid .season-container {
+  margin-bottom: 1rem;
+  cursor: pointer;
+  position: relative;
+}
+
+.content-mid .right-info-mid .season-container .season-content {
+  border: 3px solid var(--gray-color);
+  border-radius: 6px;
+  padding: .3rem .7rem;
+}
+
+.content-mid .right-info-mid .season-container .all-seasons-content {
+  position: absolute;
+  top: 40px;
+  padding: .2rem;
+  border-radius: 4px;
+  background-color: var(--gray-color);
+  border: 3px solid var(--gray-color);
+  height: 118px;
+  width: 100%;
+  overflow-y: scroll;
+}
+
+.content-mid .right-info-mid .season-container .all-seasons-content button {
+  color: #b9b8b8;
+  background-color: #181818;
+  width: 100%;
+  padding: .5rem 1rem;
+  border-radius: 4px;
+  margin-bottom: .3rem;
+  font-weight: 500;
 }
 
 .display {

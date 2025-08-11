@@ -354,10 +354,86 @@ async function seeMovieInfos(apiKey, movieId, movieType) {
 
       rightInfoMid.append(movieTime);
     } else {
+      const seasonContainer = createHtmlElement("div", "season-container");
+
       const seasons = createHtmlElement("p", "season-content");
+
+      seasonContainer.append(seasons);
       if (movie.seasons.length > 1) {
         seasons.textContent = `${movie.seasons.length} temporadas`;
-        rightInfoMid.append(seasons);
+
+        const allTempsContent = createHtmlElement(
+          "div",
+          "all-seasons-content, display"
+        );
+
+        const temps = movie.seasons;
+
+        for (let i = 0; i < temps.length; i++) {
+          const tempBtn = createHtmlElement(
+            "button",
+            "temp-btn",
+            `temp-${temps[i].season_number}`
+          );
+          tempBtn.innerText = temps[i].name;
+
+          allTempsContent.append(tempBtn);
+        }
+
+        seasonContainer.append(allTempsContent);
+        rightInfoMid.append(seasonContainer);
+
+        if (seasons) {
+          seasons.addEventListener("click", () => {
+            const allTempsContent = document.querySelector(
+              ".all-seasons-content"
+            );
+            allTempsContent.classList.toggle("display");
+
+            if (!allTempsContent.classList.contains("display")) {
+              const infoModal = document.querySelector(".infos-modal");
+              infoModal.addEventListener("click", (ev) => {
+                if (
+                  ev.target !== seasons &&
+                  !ev.target.classList.contains("temp-btn")
+                ) {
+                  allTempsContent.classList.add("display");
+                }
+              });
+            }
+
+            const tempBtn = document.querySelectorAll(".temp-btn");
+
+            tempBtn.forEach((btn) => {
+              btn.addEventListener("click", () => {
+                const seasonNumber = Number(btn.id.split("-")[1]);
+
+                const clickedTemp = temps.filter(
+                  (t) => t.season_number === seasonNumber
+                );
+
+                seasons.textContent = `${clickedTemp[0].name} (${clickedTemp[0].episode_count} episódios)`;
+
+                if (clickedTemp[0].overview) {
+                  overview.innerText = clickedTemp[0].overview;
+                } else {
+                  overview.innerText = movie.overview;
+                }
+
+                if (clickedTemp[0].air_date) {
+                  const dateSeason = new Date(clickedTemp[0].air_date);
+                  releaseDate.innerText = dateSeason.toLocaleDateString("pt-BR", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                  });
+                }
+
+                console.log(clickedTemp);
+              });
+            });
+          });
+        }
       } else {
         seasons.textContent = `${movie.seasons.length} temporada`;
         rightInfoMid.append(seasons);
@@ -472,8 +548,8 @@ async function insertTmdbVideo(apiKey, profileType) {
     );
 
     if (trailers.length < 1) {
-      window.location.reload()
-      return
+      window.location.reload();
+      return;
     }
 
     let randomTrailer;
