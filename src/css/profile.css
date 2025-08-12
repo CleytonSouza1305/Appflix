@@ -593,6 +593,34 @@ button#submitPin {
   font-weight: 500;
 }
 
+.infos-modal .content-mid .left-info-mid .bottom-data-mid .overview {
+  max-height: 100px;
+  overflow-y: scroll;
+  border-radius: 4px;
+  border: 2px solid var(--gray-color);
+  padding: 1rem;
+}
+
+.bottom-data-mid .overview::-webkit-scrollbar {
+  width: 5px; 
+  height: 10px;
+}
+
+.bottom-data-mid .overview::-webkit-scrollbar-track {
+  background: rgb(197, 197, 197); 
+}
+
+.bottom-data-mid .overview::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  
+  border: 3px solid transparent; 
+  background-clip: padding-box
+}
+
+.bottom-data-mid .overview::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-color);
+}
+
 .left-info-mid .top-data-mid .vote-content {
   display: flex;
   align-items: center;
