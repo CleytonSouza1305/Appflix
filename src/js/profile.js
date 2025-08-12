@@ -359,15 +359,17 @@ async function seeMovieInfos(apiKey, movieId, movieType) {
       const seasons = createHtmlElement("p", "season-content");
 
       seasonContainer.append(seasons);
+
+      console.log(movie)
       if (movie.seasons.length > 1) {
-        seasons.textContent = `${movie.seasons.length} temporadas`;
+        seasons.textContent = `${movie.seasons.length} temporadas - (${movie.number_of_episodes} episódios)`;
 
         const allTempsContent = createHtmlElement(
           "div",
           "all-seasons-content, display"
         );
 
-        const temps = movie.seasons;
+        const temps = movie.seasons.filter((t) => t.name !== 'Especiais');
 
         for (let i = 0; i < temps.length; i++) {
           const tempBtn = createHtmlElement(
@@ -412,7 +414,7 @@ async function seeMovieInfos(apiKey, movieId, movieType) {
                   (t) => t.season_number === seasonNumber
                 );
 
-                seasons.textContent = `${clickedTemp[0].name} (${clickedTemp[0].episode_count} episódios)`;
+                seasons.textContent = `${clickedTemp[0].name} - (${clickedTemp[0].episode_count} episódios)`;
 
                 if (clickedTemp[0].overview) {
                   overview.innerText = clickedTemp[0].overview;
@@ -428,14 +430,12 @@ async function seeMovieInfos(apiKey, movieId, movieType) {
                     year: "numeric",
                   });
                 }
-
-                console.log(clickedTemp);
               });
             });
           });
         }
       } else {
-        seasons.textContent = `${movie.seasons.length} temporada`;
+        seasons.textContent = `${movie.seasons.length} temporada - (${movie.number_of_episodes} episódios)`;
         rightInfoMid.append(seasons);
       }
     }
