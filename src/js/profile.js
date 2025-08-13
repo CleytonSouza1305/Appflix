@@ -185,11 +185,11 @@ async function renderMovie(apikey, profileType) {
   if (!profileType) {
     routers = [
       {
-        endpoint: `https://api.themoviedb.org/3/movie/popular?api_key=${apikey}&language=pt-BR&page=${randomPage}`,
+        endpoint: `https://api.themoviedb.org/3/movie/popular?api_key=${apikey}&language=pt-BR&page=1`,
         title: "Filmes Populares",
       },
       {
-        endpoint: `https://api.themoviedb.org/3/tv/popular?api_key=${apikey}&language=pt-BR&page=${randomPage}`,
+        endpoint: `https://api.themoviedb.org/3/tv/popular?api_key=${apikey}&language=pt-BR&page=1`,
         title: "Séries Populares",
       },
       {
@@ -197,30 +197,30 @@ async function renderMovie(apikey, profileType) {
         title: "Filmes melhor avaliados",
       },
       {
-        endpoint: `https://api.themoviedb.org/3/movie/upcoming?api_key=${apikey}&language=pt-BR&page=${randomPage}`,
+        endpoint: `https://api.themoviedb.org/3/movie/upcoming?api_key=${apikey}&language=pt-BR&page=1`,
         title: "Em Breve",
       },
       {
-        endpoint: `https://api.themoviedb.org/3/movie/now_playing?api_key=${apikey}&language=pt-BR&page=${randomPage}`,
+        endpoint: `https://api.themoviedb.org/3/movie/now_playing?api_key=${apikey}&language=pt-BR&page=1`,
         title: "Filmes em Exibição",
       },
       {
-        endpoint: `https://api.themoviedb.org/3/tv/top_rated?api_key=${apikey}&language=pt-BR&page=${randomPage}`,
+        endpoint: `https://api.themoviedb.org/3/tv/top_rated?api_key=${apikey}&language=pt-BR&page=1`,
         title: "Séries melhor avaliadas",
       },
       {
-        endpoint: `https://api.themoviedb.org/3/tv/on_the_air?api_key=${apikey}&language=pt-BR&page=${randomPage}`,
+        endpoint: `https://api.themoviedb.org/3/tv/on_the_air?api_key=${apikey}&language=pt-BR&page=1`,
         title: "Séries no Ar",
       },
     ];
   } else {
     routers = [
       {
-        endpoint: `https://api.themoviedb.org/3/discover/movie?api_key=${apikey}&with_genres=16&language=pt-BR&page=${randomPage}`,
+        endpoint: `https://api.themoviedb.org/3/discover/movie?api_key=${apikey}&with_genres=16&language=pt-BR&page=1}`,
         title: "Filmes Populares",
       },
       {
-        endpoint: `https://api.themoviedb.org/3/discover/tv?api_key=${apikey}&with_genres=16&language=pt-BR&page=${randomPage}`,
+        endpoint: `https://api.themoviedb.org/3/discover/tv?api_key=${apikey}&with_genres=16&language=pt-BR&page=1`,
         title: "Séries Populares",
       },
       {
@@ -228,7 +228,7 @@ async function renderMovie(apikey, profileType) {
         title: "Melhor animações",
       },
       {
-        endpoint: `https://api.themoviedb.org/3/discover/tv?api_key=${apikey}&with_genres=16&with_original_language=ja&sort_by=vote_average.desc&vote_count.gte=50&language=pt-BR&page=${randomPage}`,
+        endpoint: `https://api.themoviedb.org/3/discover/tv?api_key=${apikey}&with_genres=16&with_original_language=ja&sort_by=vote_average.desc&vote_count.gte=50&language=pt-BR&page=1`,
         title: "Animes animes",
       },
       {
@@ -247,6 +247,47 @@ async function renderMovie(apikey, profileType) {
 }
 
 function createCarouselContainer(moviesData, containerTitle) {
+  const title = containerTitle.replaceAll(" ", "-");
+  const container = createHtmlElement(
+    "div",
+    `container, content-${title.toLowerCase()}`
+  );
+
+  const titleH2 = createHtmlElement("h2");
+  titleH2.innerText = containerTitle;
+
+  const contentCards = createHtmlElement("div", `content-card`);
+
+  const cards = createHtmlElement("div", `all-cards`);
+
+  const movies = moviesData.filter((m) => m.backdrop_path);
+
+  for (let i = 0; i < movies.length; i++) {
+    const card = createHtmlElement("div", `card`);
+    card.dataset.movieId = movies[i].id;
+
+    const movieImage = createHtmlElement("div", `movie-image-div`);
+    const img = createHtmlElement("img");
+    img.src = `https://image.tmdb.org/t/p/w1280${movies[i].backdrop_path}`;
+
+    movieImage.append(img);
+    card.append(movieImage)
+
+    cards.append(card);
+  }
+
+  contentCards.append(titleH2, cards);
+
+  const buttons = createHtmlElement("div", `button-content`);
+
+  const nextBtn = createHtmlElement("button", `next-movie, next-${title.toLowerCase()}, fa-solid, fa-angles-right`)
+  const returntBtn = createHtmlElement("button", `return-movie, return-${title.toLowerCase()}, fa-solid, fa-angles-left`)
+
+  buttons.append(returntBtn, nextBtn)
+  container.append(contentCards, buttons);
+
+  const allContainers = document.querySelector(".all-movie-container");
+  allContainers.append(container);
   console.log(moviesData);
 }
 
