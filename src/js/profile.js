@@ -229,7 +229,7 @@ async function renderMovie(apikey, profileType) {
       },
       {
         endpoint: `https://api.themoviedb.org/3/discover/tv?api_key=${apikey}&with_genres=16&with_original_language=ja&sort_by=vote_average.desc&vote_count.gte=50&language=pt-BR&page=1`,
-        title: "Animes animes",
+        title: "Melhores animes",
       },
       {
         endpoint: `https://api.themoviedb.org/3/discover/tv?api_key=${apikey}&with_genres=16&sort_by=popularity.desc&language=pt-BR&page=1`,
@@ -337,7 +337,7 @@ function moveCarousel() {
           } else if (windowWidth > 600) {
             scrollAmount = cardWidth * 3;
           } else {
-            scrollAmount =  (cardWidth + (cardWidth / 2)) - (windowWidth / 2)
+            scrollAmount =  cardWidth
           }
 
           if (track) {
@@ -379,7 +379,7 @@ function moveCarousel() {
           } else if (windowWidth > 600) {
             scrollAmount = cardWidth * 3;
           } else {
-            scrollAmount = (cardWidth + (cardWidth / 2)) - (windowWidth / 2);
+            scrollAmount = cardWidth
           }
 
           if (track) {
