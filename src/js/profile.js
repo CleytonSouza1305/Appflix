@@ -337,7 +337,7 @@ function moveCarousel() {
           } else if (windowWidth > 600) {
             scrollAmount = cardWidth * 3;
           } else {
-            scrollAmount =  cardWidth + (windowWidth / 2)
+            scrollAmount =  cardWidth - (windowWidth / 2)
           }
 
           if (track) {
@@ -379,7 +379,7 @@ function moveCarousel() {
           } else if (windowWidth > 600) {
             scrollAmount = cardWidth * 3;
           } else {
-            scrollAmount = cardWidth + (windowWidth / 2);
+            scrollAmount = cardWidth - (windowWidth / 2);
           }
 
           if (track) {
