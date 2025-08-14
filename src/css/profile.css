@@ -358,7 +358,7 @@ button#submitPin {
   height: 100%;
   width: 100%;
   padding-left: 5%;
-  padding-top: 3%;
+  padding-top: 5%;
   top: 0;
   display: flex;
   align-items: start;
@@ -370,7 +370,7 @@ button#submitPin {
 .movie-data-info h2 {
   font-family: Malow-Font, sans-serif;
   font-size: 3.5rem;
-  width: 600px;
+  width: 800px;
 }
 
 .movie-data-info .overview {
@@ -716,6 +716,11 @@ button#submitPin {
   position: relative;
 }
 
+.all-movie-container .container {
+  width: 100%;
+  position: relative;
+}
+
 .all-movie-container .container .content-card {
   width: 100%;
 }
@@ -723,7 +728,7 @@ button#submitPin {
 .all-movie-container .container .content-card .all-cards {
   display: flex;
   gap: 1rem;
-  padding: 1rem 0;
+  padding: .5rem 0;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
@@ -738,17 +743,12 @@ button#submitPin {
 .content-card .all-cards .card {
   flex: 0 0 auto;
   scroll-snap-align: start;
-  transition: transform 0.3s ease;
-}
-
-.content-card .all-cards .card:hover {
-  transform: scale(1.08);
 }
 
 .content-card .all-cards .movie-image-div {
-  width: 255px;
-  height: 145px;
-  border-radius: 6px;
+  width: 290px;
+  height: 150px;
+  border-radius: 4px;
   overflow: hidden;
 }
 
@@ -758,24 +758,25 @@ button#submitPin {
   object-fit: cover;
 }
 
-/* Botões de navegação */
 .button-content {
   position: absolute;
   top: 50%;
   width: 100%;
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  pointer-events: none; /* só deixa o clique no botão */
+  pointer-events: none; 
+  padding: 0 .5rem;
 }
 
 .button-content button {
-  background-color: rgba(0, 0, 0, 0.6);
-  color: white;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: var(--white-color);
   border: none;
   font-size: 1.5rem;
   padding: 0.5rem;
   cursor: pointer;
-  border-radius: 50%;
+  border-radius: 4px;
   pointer-events: auto;
   transition: background 0.3s ease;
 }

@@ -244,6 +244,10 @@ async function renderMovie(apikey, profileType) {
       createCarouselContainer(data.results, routers[i].title);
     }
   }
+
+  setTimeout(() => {
+    moveCarousel();
+  }, 1000);
 }
 
 function createCarouselContainer(moviesData, containerTitle) {
@@ -258,7 +262,11 @@ function createCarouselContainer(moviesData, containerTitle) {
 
   const contentCards = createHtmlElement("div", `content-card`);
 
-  const cards = createHtmlElement("div", `all-cards`);
+  const carouselWrapper = createHtmlElement("div", `carousel-wrapper`);
+  const cards = createHtmlElement(
+    "div",
+    `all-cards, track-${title.toLowerCase()}`
+  );
 
   const movies = moviesData.filter((m) => m.backdrop_path);
 
@@ -271,24 +279,119 @@ function createCarouselContainer(moviesData, containerTitle) {
     img.src = `https://image.tmdb.org/t/p/w1280${movies[i].backdrop_path}`;
 
     movieImage.append(img);
-    card.append(movieImage)
+    card.append(movieImage);
 
     cards.append(card);
   }
 
-  contentCards.append(titleH2, cards);
+  carouselWrapper.append(cards);
+
+  contentCards.append(titleH2, carouselWrapper);
 
   const buttons = createHtmlElement("div", `button-content`);
 
-  const nextBtn = createHtmlElement("button", `next-movie, next-${title.toLowerCase()}, fa-solid, fa-angles-right`)
-  const returntBtn = createHtmlElement("button", `return-movie, return-${title.toLowerCase()}, fa-solid, fa-angles-left`)
+  const nextBtn = createHtmlElement(
+    "button",
+    `next-movie, next-${title.toLowerCase()}, fa-solid, fa-angles-right`
+  );
+  const returntBtn = createHtmlElement(
+    "button",
+    `return-movie, return-${title.toLowerCase()}, fa-solid, fa-angles-left`
+  );
 
-  buttons.append(returntBtn, nextBtn)
+  buttons.append(returntBtn, nextBtn);
   container.append(contentCards, buttons);
 
   const allContainers = document.querySelector(".all-movie-container");
   allContainers.append(container);
+
   console.log(moviesData);
+}
+
+function moveCarousel() {
+  const nextBtn = document.querySelectorAll(".next-movie");
+  nextBtn.forEach((btn) => {
+    btn.addEventListener("click", (ev) => {
+      const clickedBtn = ev.currentTarget.classList[1];
+
+      const className = clickedBtn.replace("next-", "");
+
+      const allTracks = document.querySelectorAll(".all-cards");
+      allTracks.forEach((container) => {
+        const contentClass = container.classList[1];
+
+        const clickedTrack = contentClass.replace("track-", "");
+        if (clickedTrack === className) {
+          const track = document.querySelector(`.${contentClass}`);
+          const cards = track.querySelectorAll(".card");
+
+          const windowWidth = window.innerWidth;
+          console.log(windowWidth);
+
+          let cardWidth = cards[0].offsetWidth + 32;
+
+          let scrollAmount = 0;
+
+          if (windowWidth > 1200) {
+            scrollAmount = cardWidth * 4;
+          } else if (windowWidth > 600) {
+            scrollAmount = cardWidth * 3;
+          } else {
+            scrollAmount = windowWidth / 2;
+          }
+
+          if (track) {
+            track.scrollBy({
+              left: scrollAmount,
+              behavior: "smooth",
+            });
+          }
+        }
+      });
+    });
+  });
+
+  const prevBtn = document.querySelectorAll(".return-movie");
+  prevBtn.forEach((btn) => {
+    btn.addEventListener("click", (ev) => {
+      const clickedBtn = ev.currentTarget.classList[1];
+
+      const className = clickedBtn.replace("return-", "");
+
+      const allTracks = document.querySelectorAll(".all-cards");
+      allTracks.forEach((container) => {
+        const contentClass = container.classList[1];
+
+        const clickedTrack = contentClass.replace("track-", "");
+        if (clickedTrack === className) {
+          const track = document.querySelector(`.${contentClass}`);
+          const cards = track.querySelectorAll(".card");
+
+          const windowWidth = window.innerWidth;
+          console.log(windowWidth);
+
+          let cardWidth = cards[0].offsetWidth + 32;
+
+          let scrollAmount = 0;
+
+          if (windowWidth > 1200) {
+            scrollAmount = cardWidth * 4;
+          } else if (windowWidth > 600) {
+            scrollAmount = cardWidth * 3;
+          } else {
+            scrollAmount = windowWidth / 2;
+          }
+
+          if (track) {
+            track.scrollBy({
+              left: -scrollAmount,
+              behavior: "smooth",
+            });
+          }
+        }
+      });
+    });
+  });
 }
 
 async function tmdbApi(endpoint) {
