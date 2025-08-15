@@ -1,6 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=TikTok+Sans:opsz,wght@12..36,300..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=TikTok+Sans:opsz,wght@12..36,300..900&display=swap");
 
-@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap");
 
 :root {
   --primary-color: #e50914;
@@ -285,7 +285,7 @@ button#submitPin {
 }
 
 .movie-background {
-  width: 100Vw;
+  width: 100vw;
   height: 100vh;
   position: relative;
 }
@@ -356,7 +356,12 @@ button#submitPin {
 .movie-data-info {
   position: relative;
   color: var(--white-color);
-  background-image: linear-gradient(90deg, rgb(0, 0, 0, 0.7), rgb(0, 0, 0, 0.5), transparent);
+  background-image: linear-gradient(
+    90deg,
+    rgb(0, 0, 0, 0.7),
+    rgb(0, 0, 0, 0.5),
+    transparent
+  );
   height: 100%;
   width: 100%;
   padding-left: 5%;
@@ -372,7 +377,7 @@ button#submitPin {
 .movie-data-info h2 {
   font-family: Malow-Font, sans-serif;
   width: 600px;
-  font-family: 'Cinzel', serif;
+  font-family: "Cinzel", serif;
   font-size: 3.2rem;
   letter-spacing: 1px;
 }
@@ -401,7 +406,7 @@ button#submitPin {
 
 .movie-data-info .div-data-buttons button.play-btn:hover {
   background-color: rgb(255, 255, 255, 0.7);
-} 
+}
 
 .movie-data-info .div-data-buttons button.infos-btn {
   background-color: rgba(109, 109, 110, 0.7);
@@ -443,20 +448,20 @@ button#submitPin {
 }
 
 .infos-modal::-webkit-scrollbar {
-  width: 5px; 
+  width: 5px;
   height: 10px;
 }
 
 .infos-modal::-webkit-scrollbar-track {
-  background: transparent; 
+  background: transparent;
 }
 
 .infos-modal::-webkit-scrollbar-thumb {
-  background: rgba(255, 0, 0, 0.8); 
+  background: rgba(255, 0, 0, 0.8);
   border-radius: 999px;
-  
-  border: 3px solid transparent; 
-  background-clip: padding-box
+
+  border: 3px solid transparent;
+  background-clip: padding-box;
 }
 
 .infos-modal::-webkit-scrollbar-thumb:hover {
@@ -498,12 +503,17 @@ button#submitPin {
 }
 
 .movie-info-modal .movie-info-content-top .movie-info-background::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   width: 100%;
   height: 100%;
-  background-image: linear-gradient(to top, rgb(0, 0, 0, 0.8), rgb(0, 0, 0, 0.5), transparent);
+  background-image: linear-gradient(
+    to top,
+    rgb(0, 0, 0, 0.8),
+    rgb(0, 0, 0, 0.5),
+    transparent
+  );
 }
 
 .movie-info-content-top .movie-data {
@@ -532,7 +542,7 @@ button#submitPin {
 .movie-info-content-top .movie-data .movie-title {
   width: 350px;
   font-size: 2rem;
-  font-family: 'Cinzel', serif;
+  font-family: "Cinzel", serif;
   letter-spacing: 1px;
 }
 
@@ -555,7 +565,7 @@ button#submitPin {
 
 .movie-info-content-top .movie-data .modal-buttons button.play-btn:hover {
   background-color: rgb(255, 255, 255, 0.7);
-} 
+}
 
 .save-in-list,
 .like-movie {
@@ -607,19 +617,19 @@ button#submitPin {
 }
 
 .bottom-data-mid .overview::-webkit-scrollbar {
-  width: 5px; 
+  width: 5px;
   height: 10px;
 }
 
 .bottom-data-mid .overview::-webkit-scrollbar-track {
-  background: rgb(197, 197, 197); 
+  background: rgb(197, 197, 197);
 }
 
 .bottom-data-mid .overview::-webkit-scrollbar-thumb {
   border-radius: 999px;
-  
-  border: 3px solid transparent; 
-  background-clip: padding-box
+
+  border: 3px solid transparent;
+  background-clip: padding-box;
 }
 
 .bottom-data-mid .overview::-webkit-scrollbar-thumb:hover {
@@ -659,20 +669,20 @@ button#submitPin {
 }
 
 .season-container .all-seasons-content::-webkit-scrollbar {
-  width: 5px; 
+  width: 5px;
   height: 10px;
 }
 
 .season-container .all-seasons-content::-webkit-scrollbar-track {
-  background: transparent; 
+  background: transparent;
 }
 
 .season-container .all-seasons-content::-webkit-scrollbar-thumb {
-  background: rgba(255, 0, 0, 0.8); 
+  background: rgba(255, 0, 0, 0.8);
   border-radius: 999px;
-  
-  border: 3px solid transparent; 
-  background-clip: padding-box
+
+  border: 3px solid transparent;
+  background-clip: padding-box;
 }
 
 .season-container .all-seasons-content::-webkit-scrollbar-thumb:hover {
@@ -688,13 +698,13 @@ button#submitPin {
 .content-mid .right-info-mid .season-container .season-content {
   border: 3px solid var(--gray-color);
   border-radius: 6px;
-  padding: .3rem .7rem;
+  padding: 0.3rem 0.7rem;
 }
 
 .content-mid .right-info-mid .season-container .all-seasons-content {
   position: absolute;
   top: 40px;
-  padding: .2rem;
+  padding: 0.2rem;
   border-radius: 4px;
   background-color: var(--gray-color);
   border: 3px solid var(--gray-color);
@@ -707,9 +717,9 @@ button#submitPin {
   color: #b9b8b8;
   background-color: #181818;
   width: 100%;
-  padding: .5rem 1rem;
+  padding: 0.5rem 1rem;
   border-radius: 4px;
-  margin-bottom: .3rem;
+  margin-bottom: 0.3rem;
   font-weight: 500;
 }
 
@@ -733,7 +743,7 @@ button#submitPin {
 .all-movie-container .container .content-card .all-cards {
   display: flex;
   gap: 1rem;
-  padding: .5rem 0;
+  padding: 0.5rem 0;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
@@ -748,6 +758,58 @@ button#submitPin {
 .content-card .all-cards .card {
   flex: 0 0 auto;
   scroll-snap-align: start;
+  cursor: pointer;
+  position: relative;
+}
+
+.content-card .all-cards .card .content-carousel-info {
+  position: absolute;
+  top: -150px;
+  pointer-events: none;
+  z-index: 5;
+  width: 100%;
+  height: 100%;
+  transition: ease-in-out 300ms;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.8),
+    rgba(0, 0, 0, 0.5),
+    rgba(0, 0, 0, 0.1)
+  );
+  padding: .5rem;
+}
+
+.content-card .all-cards .card:hover .content-carousel-info {
+  top: 0;
+}
+
+.content-card .all-cards .card .content-carousel-info .content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+.content-carousel-info .content .content-btn-hovered,
+.content-btn-hovered .left-btn-hovered {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .7rem;
+}
+
+.content-carousel-info .content .content-btn-hovered button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid rgb(255, 255, 255, 0.7);
+  color: rgb(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: ease-in-out 100ms;
 }
 
 .content-card .all-cards .movie-image-div {
@@ -770,8 +832,8 @@ button#submitPin {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  pointer-events: none; 
-  padding: 0 .5rem;
+  pointer-events: none;
+  padding: 0 0.5rem;
 }
 
 .button-content button {
@@ -789,7 +851,6 @@ button#submitPin {
 .button-content button:hover {
   background-color: rgba(0, 0, 0, 0.8);
 }
-
 
 .display {
   display: none;
@@ -873,7 +934,7 @@ button#submitPin {
     color: var(--gray-color);
     background-color: var(--white-color);
     border-radius: 6px;
-    font-size: .8rem;
+    font-size: 0.8rem;
     margin-right: 0.3rem;
     font-weight: 500;
     transition: ease-in-out 100ms;
@@ -894,7 +955,7 @@ button#submitPin {
     height: 100vh;
     justify-content: flex-start;
   }
-  
+
   .content-mid .right-info-mid .genre-content {
     grid-template-columns: 1fr 1fr 1fr;
     width: 100%;
@@ -948,12 +1009,12 @@ button#submitPin {
     width: 100%;
   }
 
-  .content-mid .right-info-mid .season-container .season-content  {
+  .content-mid .right-info-mid .season-container .season-content {
     top: 50px;
   }
 
   .content-mid .right-info-mid .season-container .all-seasons-content button {
     font-size: 1.2rem;
-    padding: .5rem;
+    padding: 0.5rem;
   }
 }

@@ -178,8 +178,6 @@ function goToKidsProfile(data) {
 }
 
 async function renderMovie(apikey, profileType) {
-  const randomPage = Math.floor(Math.random() * 10);
-
   let routers = [];
 
   if (!profileType) {
@@ -187,30 +185,37 @@ async function renderMovie(apikey, profileType) {
       {
         endpoint: `https://api.themoviedb.org/3/movie/popular?api_key=${apikey}&language=pt-BR&page=1`,
         title: "Filmes Populares",
+        type: "movie",
       },
       {
         endpoint: `https://api.themoviedb.org/3/tv/popular?api_key=${apikey}&language=pt-BR&page=1`,
         title: "Séries Populares",
+        type: "tv",
       },
       {
         endpoint: `https://api.themoviedb.org/3/movie/top_rated?api_key=${apikey}&language=pt-BR&page=1`,
         title: "Filmes melhor avaliados",
+        type: "movie",
       },
       {
         endpoint: `https://api.themoviedb.org/3/movie/upcoming?api_key=${apikey}&language=pt-BR&page=1`,
         title: "Em Breve",
+        type: "movie",
       },
       {
         endpoint: `https://api.themoviedb.org/3/movie/now_playing?api_key=${apikey}&language=pt-BR&page=1`,
         title: "Filmes em Exibição",
+        type: "movie",
       },
       {
         endpoint: `https://api.themoviedb.org/3/tv/top_rated?api_key=${apikey}&language=pt-BR&page=1`,
         title: "Séries melhor avaliadas",
+        type: "tv",
       },
       {
         endpoint: `https://api.themoviedb.org/3/tv/on_the_air?api_key=${apikey}&language=pt-BR&page=1`,
         title: "Séries no Ar",
+        type: "tv",
       },
     ];
   } else {
@@ -218,22 +223,27 @@ async function renderMovie(apikey, profileType) {
       {
         endpoint: `https://api.themoviedb.org/3/discover/movie?api_key=${apikey}&with_genres=16&language=pt-BR&page=1}`,
         title: "Filmes Populares",
+        type: "movie",
       },
       {
         endpoint: `https://api.themoviedb.org/3/discover/tv?api_key=${apikey}&with_genres=16&language=pt-BR&page=1`,
         title: "Séries Populares",
+        type: "tv",
       },
       {
         endpoint: `https://api.themoviedb.org/3/discover/movie?api_key=${apikey}&with_genres=16&sort_by=vote_average.desc&vote_count.gte=100&language=pt-BR&page=1`,
         title: "Melhor animações",
+        type: "movie",
       },
       {
         endpoint: `https://api.themoviedb.org/3/discover/tv?api_key=${apikey}&with_genres=16&with_original_language=ja&sort_by=vote_average.desc&vote_count.gte=50&language=pt-BR&page=1`,
         title: "Melhores animes",
+        type: "tv",
       },
       {
         endpoint: `https://api.themoviedb.org/3/discover/tv?api_key=${apikey}&with_genres=16&sort_by=popularity.desc&language=pt-BR&page=1`,
         title: "Kids",
+        type: "tv",
       },
     ];
   }
@@ -241,7 +251,12 @@ async function renderMovie(apikey, profileType) {
   for (let i = 0; i < routers.length; i++) {
     const data = await tmdbApi(routers[i].endpoint);
     if (data) {
-      createCarouselContainer(data.results, routers[i].title);
+      createCarouselContainer(
+        data.results,
+        routers[i].title,
+        routers[i].type,
+        apikey
+      );
     }
   }
 
@@ -250,7 +265,12 @@ async function renderMovie(apikey, profileType) {
   }, 1000);
 }
 
-function createCarouselContainer(moviesData, containerTitle) {
+async function createCarouselContainer(
+  moviesData,
+  containerTitle,
+  movieType,
+  apikey
+) {
   const title = containerTitle.replaceAll(" ", "-");
   const container = createHtmlElement(
     "div",
@@ -271,6 +291,12 @@ function createCarouselContainer(moviesData, containerTitle) {
   const movies = moviesData.filter((m) => m.backdrop_path);
 
   for (let i = 0; i < movies.length; i++) {
+    const movie = await tmdbApi(
+      `https://api.themoviedb.org/3/${movieType}/${movies[i].id}?api_key=${apikey}&language=pt-BR`
+    );
+
+    console.log(movie);
+
     const card = createHtmlElement("div", `card`);
     card.dataset.movieId = movies[i].id;
 
@@ -279,7 +305,52 @@ function createCarouselContainer(moviesData, containerTitle) {
     img.src = `https://image.tmdb.org/t/p/w1280${movies[i].backdrop_path}`;
 
     movieImage.append(img);
-    card.append(movieImage);
+
+    // COLCOAR A CLASS display NO contentInfoMovie
+    const contentInfoMovie = createHtmlElement("div", `content-carousel-info`);
+
+    const content = createHtmlElement("div", `content`);
+
+    const buttonsContent = createHtmlElement("div", `content-btn-hovered`);
+
+    const leftBtns = createHtmlElement("div", `left-btn-hovered`);
+    const rightBtns = createHtmlElement("div", `right-btn-hovered`);
+
+    const playBtn = createHtmlElement("button", "play-btn");
+    playBtn.dataset.startmovie = movies[i].id;
+
+    const playIcon = createHtmlElement("i", "fa-solid, fa-play");
+    playBtn.append(playIcon);
+
+    const plusBtn = createHtmlElement("button", "save-in-list");
+    plusBtn.dataset.save = movies[i].id;
+
+    const plusIcon = createHtmlElement("i", "fa-solid, fa-plus");
+    plusBtn.append(plusIcon);
+
+    const likeBtn = createHtmlElement("button", "like-movie");
+    likeBtn.dataset.likeMovie = movies[i].id;
+
+    const likeIcon = createHtmlElement("i", "fa-regular, fa-thumbs-up");
+    likeBtn.append(likeIcon);
+
+    leftBtns.append(playBtn, plusBtn, likeBtn);
+
+    const chevronBtn = createHtmlElement("button", "see-info");
+    chevronBtn.dataset.info = movies[i].id;
+
+    const crevronIcon = createHtmlElement("i", "fa-solid, fa-chevron-down");
+    chevronBtn.append(crevronIcon);
+
+    rightBtns.append(chevronBtn);
+
+    buttonsContent.append(leftBtns, rightBtns);
+
+
+    content.append(buttonsContent);
+
+    contentInfoMovie.append(content);
+    card.append(movieImage, contentInfoMovie);
 
     cards.append(card);
   }
@@ -304,8 +375,6 @@ function createCarouselContainer(moviesData, containerTitle) {
 
   const allContainers = document.querySelector(".all-movie-container");
   allContainers.append(container);
-
-  console.log(moviesData);
 }
 
 function moveCarousel() {
@@ -336,7 +405,7 @@ function moveCarousel() {
           } else if (windowWidth > 600) {
             scrollAmount = cardWidth * 3;
           } else {
-            scrollAmount =  cardWidth - (cardWidth / 2)
+            scrollAmount = cardWidth - cardWidth / 2;
           }
 
           if (track) {
@@ -377,7 +446,7 @@ function moveCarousel() {
           } else if (windowWidth > 600) {
             scrollAmount = cardWidth * 3;
           } else {
-            scrollAmount = cardWidth - (cardWidth / 2)
+            scrollAmount = cardWidth - cardWidth / 2;
           }
 
           if (track) {
@@ -466,23 +535,22 @@ async function seeMovieInfos(apiKey, movieId, movieType) {
 
     const modalButtons = createHtmlElement("div", "modal-buttons");
 
-    const playBtn = createHtmlElement("button", "play-btn", "play-" + movie.id);
+    const playBtn = createHtmlElement("button", "play-btn");
+    playBtn.dataset.startmovie = movie.id;
+
     const playIcon = createHtmlElement("i", "fa-solid, fa-play");
     playBtn.append(playIcon, "Assistir");
 
-    const plusBtn = createHtmlElement(
-      "button",
-      "save-in-list",
-      "save-" + movie.id
-    );
+    const plusBtn = createHtmlElement("button", "save-in-list");
+
+    plusBtn.dataset.save = movie.id;
+
     const plusIcon = createHtmlElement("i", "fa-solid, fa-plus");
     plusBtn.append(plusIcon);
 
-    const likeBtn = createHtmlElement(
-      "button",
-      "like-movie",
-      "like-" + movie.id
-    );
+    const likeBtn = createHtmlElement("button", "like-movie");
+
+    likeBtn.dataset.likeMovie = movie.id;
 
     const likeIcon = createHtmlElement("i", "fa-regular, fa-thumbs-up");
     likeBtn.append(likeIcon);
