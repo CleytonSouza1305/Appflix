@@ -203,11 +203,6 @@ async function renderMovie(apikey, profileType) {
         type: "movie",
       },
       {
-        endpoint: `https://api.themoviedb.org/3/movie/now_playing?api_key=${apikey}&language=pt-BR&page=1`,
-        title: "Filmes em Exibição",
-        type: "movie",
-      },
-      {
         endpoint: `https://api.themoviedb.org/3/tv/top_rated?api_key=${apikey}&language=pt-BR&page=1`,
         title: "Séries melhor avaliadas",
         type: "tv",
@@ -265,6 +260,19 @@ async function renderMovie(apikey, profileType) {
   }, 1000);
 }
 
+function movieInfoClicked(apikey, movieType) {
+  const seeInfoBtn = document.querySelectorAll(".see-info");
+
+  seeInfoBtn.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const movieId = btn.dataset.info;
+      const movieType = btn.dataset.type;
+
+      seeMovieInfos(apikey, movieId, movieType);
+    });
+  });
+}
+
 async function createCarouselContainer(
   moviesData,
   containerTitle,
@@ -295,8 +303,6 @@ async function createCarouselContainer(
       `https://api.themoviedb.org/3/${movieType}/${movies[i].id}?api_key=${apikey}&language=pt-BR`
     );
 
-    console.log(movie);
-
     const card = createHtmlElement("div", `card`);
     card.dataset.movieId = movies[i].id;
 
@@ -306,7 +312,6 @@ async function createCarouselContainer(
 
     movieImage.append(img);
 
-    // COLCOAR A CLASS display NO contentInfoMovie
     const contentInfoMovie = createHtmlElement("div", `content-carousel-info`);
 
     const content = createHtmlElement("div", `content`);
@@ -338,6 +343,7 @@ async function createCarouselContainer(
 
     const chevronBtn = createHtmlElement("button", "see-info");
     chevronBtn.dataset.info = movies[i].id;
+    chevronBtn.dataset.type = movieType;
 
     const crevronIcon = createHtmlElement("i", "fa-solid, fa-chevron-down");
     chevronBtn.append(crevronIcon);
@@ -346,10 +352,42 @@ async function createCarouselContainer(
 
     buttonsContent.append(leftBtns, rightBtns);
 
+    const genreContainer = createHtmlElement("div", `content-genres`);
+    const genres = movie.genres;
 
-    content.append(buttonsContent);
+    for (let i = 0; i < 2; i++) {
+      if (genres[i] && genres[i].name) {
+        const genre = createHtmlElement("span", `genres`);
+        genre.textContent = genres[i].name;
+        genreContainer.append(genre);
+      }
+    }
+
+    const bottomContent = createHtmlElement("div", `bottom-content`);
+
+    const movieTime = createHtmlElement("p");
+    if (movie.runtime) {
+      const hour = Math.floor(movie.runtime / 60);
+      const minuts = movie.runtime % 60;
+
+      if (hour > 0) {
+        movieTime.innerText = `${hour}h${minuts}m`;
+      } else {
+        movieTime.innerText = `${minuts}m`;
+      }
+    } else {
+      if (movie.seasons.length > 1) {
+        movieTime.innerText = `${movie.seasons.length} temporadas`;
+      } else {
+        movieTime.innerText = `${movie.seasons.length} temporada`;
+      }
+    }
+
+    bottomContent.append(genreContainer, movieTime);
+    content.append(buttonsContent, bottomContent);
 
     contentInfoMovie.append(content);
+    
     card.append(movieImage, contentInfoMovie);
 
     cards.append(card);
@@ -375,6 +413,8 @@ async function createCarouselContainer(
 
   const allContainers = document.querySelector(".all-movie-container");
   allContainers.append(container);
+
+  movieInfoClicked(apikey);
 }
 
 function moveCarousel() {
@@ -609,12 +649,14 @@ async function seeMovieInfos(apiKey, movieId, movieType) {
 
     const bottomData = createHtmlElement("div", "bottom-data-mid");
 
-    const overview = createHtmlElement("p", "overview");
+    if (movie.overview) {
+      const overview = createHtmlElement("p", "overview");
 
-    let overviewTxt = movie.overview;
+      let overviewTxt = movie.overview;
 
-    overview.innerText = overviewTxt;
-    bottomData.append(overview);
+      overview.innerText = overviewTxt;
+      bottomData.append(overview);
+    }
 
     leftInfoMid.append(topData, bottomData);
 
@@ -695,11 +737,9 @@ async function seeMovieInfos(apiKey, movieId, movieType) {
 
                 seasons.textContent = `${clickedTemp[0].name} - (${clickedTemp[0].episode_count} episódios)`;
 
-                if (clickedTemp[0].overview) {
+                if (clickedTemp[0].overview !== '') {
                   overview.innerText = clickedTemp[0].overview;
-                } else {
-                  overview.innerText = movie.overview;
-                }
+                } 
 
                 if (clickedTemp[0].air_date) {
                   const dateSeason = new Date(clickedTemp[0].air_date);
