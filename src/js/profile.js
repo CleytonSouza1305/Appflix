@@ -326,7 +326,6 @@ function moveCarousel() {
           const cards = track.querySelectorAll(".card");
 
           const windowWidth = window.innerWidth;
-          console.log(windowWidth);
 
           let cardWidth = cards[0].offsetWidth + 32;
 
@@ -337,7 +336,7 @@ function moveCarousel() {
           } else if (windowWidth > 600) {
             scrollAmount = cardWidth * 3;
           } else {
-            scrollAmount =  cardWidth
+            scrollAmount =  cardWidth - (cardWidth / 2)
           }
 
           if (track) {
@@ -368,7 +367,6 @@ function moveCarousel() {
           const cards = track.querySelectorAll(".card");
 
           const windowWidth = window.innerWidth;
-          console.log(windowWidth);
 
           let cardWidth = cards[0].offsetWidth + 32;
 
@@ -379,7 +377,7 @@ function moveCarousel() {
           } else if (windowWidth > 600) {
             scrollAmount = cardWidth * 3;
           } else {
-            scrollAmount = cardWidth
+            scrollAmount = cardWidth - (cardWidth / 2)
           }
 
           if (track) {
