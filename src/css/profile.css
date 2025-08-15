@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=TikTok+Sans:opsz,wght@12..36,300..900&display=swap');
 
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap');
+
 :root {
   --primary-color: #e50914;
   --black-color: #000;
@@ -369,8 +371,10 @@ button#submitPin {
 
 .movie-data-info h2 {
   font-family: Malow-Font, sans-serif;
-  font-size: 3.5rem;
-  width: 800px;
+  width: 600px;
+  font-family: 'Cinzel', serif;
+  font-size: 3.2rem;
+  letter-spacing: 1px;
 }
 
 .movie-data-info .overview {
@@ -526,9 +530,10 @@ button#submitPin {
 }
 
 .movie-info-content-top .movie-data .movie-title {
-  font-family: Malow-Font, sans-serif;
   width: 350px;
   font-size: 2rem;
+  font-family: 'Cinzel', serif;
+  letter-spacing: 1px;
 }
 
 .movie-info-content-top .movie-data .modal-buttons button.play-btn {
@@ -863,11 +868,6 @@ button#submitPin {
     display: none;
   }
 
-  .movie-data-info h2 {
-    font-size: 1.5rem;
-    width: 100%;
-  }
-
   .movie-data-info .div-data-buttons button {
     padding: 0.5rem 1rem;
     color: var(--gray-color);
@@ -881,5 +881,79 @@ button#submitPin {
 
   .movie-background {
     height: 35vh;
+  }
+
+  .movie-content .infos .movie-title {
+    font-size: 1.5rem;
+    width: 320px;
+  }
+
+  .movie-info-modal .infos-modal {
+    width: 100%;
+    margin-top: 0;
+    height: 100vh;
+    justify-content: flex-start;
+  }
+  
+  .content-mid .right-info-mid .genre-content {
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 100%;
+    margin: 1rem 0;
+    gap: 1rem 2rem;
+  }
+
+  .movie-info-modal .infos-modal .movie-info-content-top {
+    width: 100%;
+  }
+
+  .movie-info-content-top .movie-data {
+    bottom: 0;
+  }
+
+  .movie-info-content-top .movie-data p {
+    display: none;
+  }
+
+  .movie-info-content-top .movie-data .modal-buttons button {
+    font-size: 1rem;
+    width: 40px;
+    height: 40px;
+  }
+
+  .movie-info-content-top .movie-data .modal-buttons button.play-btn {
+    padding: 0.8rem 1.3rem;
+    width: 115px;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .content-mid {
+    flex-direction: column;
+  }
+
+  .infos-modal .content-mid .left-info-mid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .infos-modal .content-mid .right-info-mid {
+    margin-top: 2rem;
+    font-size: 1.2rem;
+  }
+
+  .infos-modal .content-mid .left-info-mid,
+  .infos-modal .content-mid .right-info-mid {
+    width: 100%;
+  }
+
+  .content-mid .right-info-mid .season-container .season-content  {
+    top: 50px;
+  }
+
+  .content-mid .right-info-mid .season-container .all-seasons-content button {
+    font-size: 1.2rem;
+    padding: .5rem;
   }
 }
