@@ -254,10 +254,6 @@ async function renderMovie(apikey, profileType) {
       );
     }
   }
-
-  setTimeout(() => {
-    moveCarousel();
-  }, 1000);
 }
 
 function movieInfoClicked(apikey) {
@@ -988,6 +984,10 @@ async function insertTmdbVideo(apiKey, profileType) {
   }
 
   renderMovie(apiKey, profileType);
+
+  setTimeout(() => {
+    moveCarousel();
+  }, 2 * 1000);
 }
 
 async function insertProfileData(data, allProfiles) {
