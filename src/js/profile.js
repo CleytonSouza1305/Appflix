@@ -221,11 +221,6 @@ async function renderMovie(apikey, profileType) {
         type: "movie",
       },
       {
-        endpoint: `https://api.themoviedb.org/3/discover/tv?api_key=${apikey}&with_genres=16&language=pt-BR&page=1`,
-        title: "Séries Populares",
-        type: "tv",
-      },
-      {
         endpoint: `https://api.themoviedb.org/3/discover/movie?api_key=${apikey}&with_genres=16&sort_by=vote_average.desc&vote_count.gte=100&language=pt-BR&page=1`,
         title: "Melhor animações",
         type: "movie",
@@ -685,7 +680,6 @@ async function seeMovieInfos(apiKey, movieId, movieType) {
       seasonContainer.append(seasons);
 
       const temps = movie.seasons.filter((t) => t.name !== "Especiais");
-      console.log(temps);
 
       if (temps.length > 1) {
         seasons.textContent = `${temps.length} temporadas - (${movie.number_of_episodes} episódios)`;
