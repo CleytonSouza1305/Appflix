@@ -782,6 +782,10 @@ button#submitPin {
   top: 0;
 }
 
+.content-card .all-cards .card:hover .movie-image-div h3 {
+  opacity: 0;
+}
+
 .content-card .all-cards .card .content-carousel-info .content {
   width: 100%;
   height: 100%;
@@ -812,10 +816,31 @@ button#submitPin {
 }
 
 .content-card .all-cards .movie-image-div {
+  position: relative;
   width: 290px;
   height: 150px;
   border-radius: 4px;
   overflow: hidden;
+}
+
+.content-card .all-cards .movie-image-div::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+  z-index: 1;
+}
+
+.content-card .all-cards .movie-image-div h3 {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  z-index: 5;
+  opacity: 1;
+  transition: opacity ease-in-out 300ms;
 }
 
 .content-card .all-cards .movie-image-div img {
@@ -833,6 +858,7 @@ button#submitPin {
   justify-content: space-between;
   pointer-events: none;
   padding: 0 0.5rem;
+  z-index: 10;
 }
 
 .button-content button {

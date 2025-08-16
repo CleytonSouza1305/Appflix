@@ -260,7 +260,7 @@ async function renderMovie(apikey, profileType) {
   }, 1000);
 }
 
-function movieInfoClicked(apikey, movieType) {
+function movieInfoClicked(apikey) {
   const seeInfoBtn = document.querySelectorAll(".see-info");
 
   seeInfoBtn.forEach((btn) => {
@@ -310,7 +310,14 @@ async function createCarouselContainer(
     const img = createHtmlElement("img");
     img.src = `https://image.tmdb.org/t/p/w1280${movies[i].backdrop_path}`;
 
-    movieImage.append(img);
+    const title = createHtmlElement("h3");
+    if (movies[i].title) {
+      title.innerText = movies[i].title;
+    } else {
+      title.innerText = movies[i].name;
+    }
+
+    movieImage.append(img, title);
 
     const contentInfoMovie = createHtmlElement("div", `content-carousel-info`);
 
@@ -387,7 +394,7 @@ async function createCarouselContainer(
     content.append(buttonsContent, bottomContent);
 
     contentInfoMovie.append(content);
-    
+
     card.append(movieImage, contentInfoMovie);
 
     cards.append(card);
@@ -649,13 +656,13 @@ async function seeMovieInfos(apiKey, movieId, movieType) {
 
     const bottomData = createHtmlElement("div", "bottom-data-mid");
 
+    const overview = createHtmlElement("p", "overview");
+
     if (movie.overview) {
-      const overview = createHtmlElement("p", "overview");
-
-      let overviewTxt = movie.overview;
-
-      overview.innerText = overviewTxt;
+      overview.innerText = movie.overview;
       bottomData.append(overview);
+    } else {
+      overview.style.display = 'none'
     }
 
     leftInfoMid.append(topData, bottomData);
@@ -737,9 +744,9 @@ async function seeMovieInfos(apiKey, movieId, movieType) {
 
                 seasons.textContent = `${clickedTemp[0].name} - (${clickedTemp[0].episode_count} episódios)`;
 
-                if (clickedTemp[0].overview !== '') {
+                if (clickedTemp[0].overview) {
                   overview.innerText = clickedTemp[0].overview;
-                } 
+                }
 
                 if (clickedTemp[0].air_date) {
                   const dateSeason = new Date(clickedTemp[0].air_date);
