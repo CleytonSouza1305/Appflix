@@ -1059,4 +1059,13 @@ button#submitPin {
     font-size: 1.2rem;
     padding: 0.5rem;
   }
+
+  .content-card .all-cards .movie-image-div {
+    width: 360px;
+    height: 190px;
+  }
+
+  .content-card .all-cards .card .content-carousel-info {
+    top: -210px;
+  }
 }
