@@ -1376,7 +1376,7 @@ async function startApp(token, profileId) {
 
   setTimeout(() => {
     saveMovie(token, data);
-  }, 500);
+  }, 1500);
 }
 
 async function validateToken(token, path) {
