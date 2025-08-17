@@ -238,6 +238,27 @@ async function renderMovie(apikey, profileType) {
     ];
   }
 
+  const token = localStorage.getItem("token");
+  const profileId = localStorage.getItem("profileId");
+
+  const profileDataArr = await profileData(token, profileId);
+
+  if (profileDataArr.favorite_list.length > 0) {
+    const movieList = [];
+    const favorite = profileDataArr.favorite_list;
+
+    for (let i = 0; i < favorite.length; i++) {
+      const movie = await tmdbApi(
+        `https://api.themoviedb.org/3/${favorite[i].type}/${favorite[i].movieId}?api_key=${apikey}&language=pt-BR`
+      );
+
+      movie.type = favorite[i].type
+      movieList.push(movie);
+    }
+
+    createListCarousel(movieList, 'Minha lista', apikey)
+  }
+
   for (let i = 0; i < routers.length; i++) {
     const data = await tmdbApi(routers[i].endpoint);
     if (data) {
@@ -249,6 +270,149 @@ async function renderMovie(apikey, profileType) {
       );
     }
   }
+}
+
+function createListCarousel(moviesData, containerTitle, apikey) {
+  const title = containerTitle.replaceAll(" ", "-");
+  const container = createHtmlElement(
+    "div",
+    `container, content-${title.toLowerCase()}`
+  );
+
+  const titleH2 = createHtmlElement("h2");
+  titleH2.innerText = containerTitle;
+
+  const contentCards = createHtmlElement("div", `content-card`);
+
+  const carouselWrapper = createHtmlElement("div", `carousel-wrapper`);
+  const cards = createHtmlElement(
+    "div",
+    `all-cards, track-${title.toLowerCase()}`
+  );
+
+  const movies = moviesData.filter((m) => m.backdrop_path);
+
+  for (let i = 0; i < movies.length; i++) {
+    const card = createHtmlElement("div", `card`);
+    card.dataset.movieId = movies[i].id;
+
+    const movieImage = createHtmlElement("div", `movie-image-div`);
+    const img = createHtmlElement("img");
+    img.src = `https://image.tmdb.org/t/p/w1280${movies[i].backdrop_path}`;
+
+    const title = createHtmlElement("h3");
+    if (movies[i].title) {
+      title.innerText = movies[i].title;
+    } else {
+      title.innerText = movies[i].name;
+    }
+
+    movieImage.append(img, title);
+
+    const contentInfoMovie = createHtmlElement("div", `content-carousel-info`);
+
+    const content = createHtmlElement("div", `content`);
+
+    const buttonsContent = createHtmlElement("div", `content-btn-hovered`);
+
+    const leftBtns = createHtmlElement("div", `left-btn-hovered`);
+    const rightBtns = createHtmlElement("div", `right-btn-hovered`);
+
+    const playBtn = createHtmlElement("button", "play-btn");
+    playBtn.dataset.startmovie = movies[i].id;
+
+    const playIcon = createHtmlElement("i", "fa-solid, fa-play");
+    playBtn.append(playIcon);
+
+    const plusBtn = createHtmlElement("button", "save-in-list");
+    plusBtn.dataset.save = movies[i].id;
+
+    const plusIcon = createHtmlElement("i", "fa-solid, fa-plus");
+    plusBtn.append(plusIcon);
+
+    const likeBtn = createHtmlElement("button", "like-movie");
+    likeBtn.dataset.likeMovie = movies[i].id;
+
+    const likeIcon = createHtmlElement("i", "fa-regular, fa-thumbs-up");
+    likeBtn.append(likeIcon);
+
+    leftBtns.append(playBtn, plusBtn, likeBtn);
+
+    const chevronBtn = createHtmlElement("button", "see-info");
+    chevronBtn.dataset.info = movies[i].id;
+    chevronBtn.dataset.type = movies[i].type;
+
+    const crevronIcon = createHtmlElement("i", "fa-solid, fa-chevron-down");
+    chevronBtn.append(crevronIcon);
+
+    rightBtns.append(chevronBtn);
+
+    buttonsContent.append(leftBtns, rightBtns);
+
+    const genreContainer = createHtmlElement("div", `content-genres`);
+
+    const genres = movies[i].genres;
+
+    for (let i = 0; i < 2; i++) {
+      if (genres[i] && genres[i].name) {
+        const genre = createHtmlElement("span", `genres`);
+        genre.textContent = genres[i].name;
+        genreContainer.append(genre);
+      }
+    }
+
+    const bottomContent = createHtmlElement("div", `bottom-content`);
+
+    const movieTime = createHtmlElement("p");
+    if (movies[i].runtime) {
+      const hour = Math.floor(movies[i].runtime / 60);
+      const minuts = movies[i].runtime % 60;
+
+      if (hour > 0) {
+        movieTime.innerText = `${hour}h${minuts}m`;
+      } else {
+        movieTime.innerText = `${minuts}m`;
+      }
+    } else {
+      if (movies[i].seasons.length > 1) {
+        movieTime.innerText = `${movies[i].seasons.length} temporadas`;
+      } else {
+        movieTime.innerText = `${movies[i].seasons.length} temporada`;
+      }
+    }
+
+    bottomContent.append(genreContainer, movieTime);
+    content.append(buttonsContent, bottomContent);
+
+    contentInfoMovie.append(content);
+
+    card.append(movieImage, contentInfoMovie);
+
+    cards.append(card);
+  }
+
+  carouselWrapper.append(cards);
+
+  contentCards.append(titleH2, carouselWrapper);
+
+  const buttons = createHtmlElement("div", `button-content`);
+
+  const nextBtn = createHtmlElement(
+    "button",
+    `next-movie, next-${title.toLowerCase()}, fa-solid, fa-angles-right`
+  );
+  const returntBtn = createHtmlElement(
+    "button",
+    `return-movie, return-${title.toLowerCase()}, fa-solid, fa-angles-left`
+  );
+
+  buttons.append(returntBtn, nextBtn);
+  container.append(contentCards, buttons);
+
+  const allContainers = document.querySelector(".all-movie-container");
+  allContainers.append(container);
+
+  movieInfoClicked(apikey);
 }
 
 function movieInfoClicked(apikey) {
@@ -499,6 +663,110 @@ function moveCarousel() {
   });
 }
 
+async function saveInListReq(token, profileId, movieId) {
+  const loader = document.getElementById("loading");
+  loader.classList.remove("display");
+
+  try {
+    const response = await fetch(
+      `https://appflix-api.onrender.com/api/profiles/${profileId}/favorite/${movieId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error(data.message);
+      return;
+    }
+
+    messageAnimated(
+      data.message,
+      4000,
+      "top",
+      "right",
+      "6px",
+      "#4CAF50",
+      "#fff",
+      500
+    );
+  } catch (e) {
+    console.error(`Erro ao salvar filme, movito: ${e}`);
+  } finally {
+    loader.classList.add("display");
+  }
+}
+
+function messageAnimated(
+  message,
+  duration,
+  gravity,
+  position,
+  borderRadius,
+  background,
+  color,
+  fontWeight
+) {
+  Toastify({
+    text: message,
+    duration: duration,
+    gravity: gravity, // top ou bottom
+    position: position, // left, center ou right
+    stopOnFocus: true, // não fecha se mouse estiver em cima
+    style: {
+      background: background,
+      color: color,
+      fontWeight: fontWeight,
+      borderRadius: borderRadius, // Em pixel,
+    },
+  }).showToast();
+}
+
+function saveMovie(token, profileData) {
+  const allBtns = document.querySelectorAll(".save-in-list");
+
+  allBtns.forEach((btn) => {
+    if (profileData.favorite_list.length > 0) {
+      for (let i = 0; i < profileData.favorite_list.length; i++) {
+        if (Number(btn.dataset.save) === profileData.favorite_list[i].movieId) {
+          btn.style.background = "#fff";
+          btn.style.color = "#000";
+          btn.style.borderColor = "#000";
+          btn.disabled = true;
+
+          const icon = btn.querySelector("i");
+          icon.classList.remove("fa-plus");
+          icon.classList.add("fa-times");
+        }
+      }
+    }
+
+    if (!btn.disabled) {
+      btn.addEventListener("click", async (ev) => {
+        const button = ev.currentTarget;
+        const movieId = button.dataset.save;
+
+        await saveInListReq(token, profileData.id, movieId);
+
+        button.style.background = "#fff";
+        button.style.color = "#000";
+        button.style.borderColor = "#000";
+        button.disabled = true;
+
+        const icon = button.querySelector("i");
+        icon.classList.remove("fa-plus");
+        icon.classList.add("fa-times");
+      });
+    }
+  });
+}
+
 async function tmdbApi(endpoint) {
   const loader = document.getElementById("loading");
   loader.classList.remove("display");
@@ -653,7 +921,7 @@ async function seeMovieInfos(apiKey, movieId, movieType) {
       overview.innerText = movie.overview;
       bottomData.append(overview);
     } else {
-      overview.style.display = 'none'
+      overview.style.display = "none";
     }
 
     leftInfoMid.append(topData, bottomData);
@@ -830,8 +1098,6 @@ async function insertTmdbVideo(apiKey, profileType) {
 
     movie = results[Math.floor(Math.random() * results.length)];
   }
-
-  console.log(movie);
 
   const endpoint = `https://api.themoviedb.org/3/${randomType.type}/${movie.id}/videos?api_key=${apiKey}&language=pt-BR`;
 
@@ -1103,6 +1369,10 @@ async function startApp(token, profileId) {
   const data = await profileData(token, profileId);
   const profiles = await searchProfile(token);
   insertProfileData(data, profiles);
+
+  setTimeout(() => {
+    saveMovie(token, data);
+  }, 500);
 }
 
 async function validateToken(token, path) {
