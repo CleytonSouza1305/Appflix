@@ -326,6 +326,7 @@ function createListCarousel(moviesData, containerTitle, apikey) {
 
     const plusBtn = createHtmlElement("button", "save-in-list");
     plusBtn.dataset.save = movies[i].id;
+    plusBtn.dataset.type = movies[i].type
 
     const plusIcon = createHtmlElement("i", "fa-solid, fa-plus");
     plusBtn.append(plusIcon);
@@ -491,6 +492,7 @@ async function createCarouselContainer(
 
     const plusBtn = createHtmlElement("button", "save-in-list");
     plusBtn.dataset.save = movies[i].id;
+    plusBtn.dataset.type = movieType
 
     const plusIcon = createHtmlElement("i", "fa-solid, fa-plus");
     plusBtn.append(plusIcon);
@@ -663,13 +665,13 @@ function moveCarousel() {
   });
 }
 
-async function saveInListReq(token, profileId, movieId) {
+async function saveInListReq(token, profileId, movieId, type) {
   const loader = document.getElementById("loading");
   loader.classList.remove("display");
 
   try {
     const response = await fetch(
-      `https://appflix-api.onrender.com/api/profiles/${profileId}/favorite/${movieId}`,
+      `https://appflix-api.onrender.com/api/profiles/${profileId}/favorite/${movieId}/${type}`,
       {
         method: "POST",
         headers: {
@@ -751,8 +753,9 @@ function saveMovie(token, profileData) {
       btn.addEventListener("click", async (ev) => {
         const button = ev.currentTarget;
         const movieId = button.dataset.save;
+        const type = button.dataset.type
 
-        await saveInListReq(token, profileData.id, movieId);
+        await saveInListReq(token, profileData.id, movieId, type);
 
         button.style.background = "#fff";
         button.style.color = "#000";
@@ -850,6 +853,7 @@ async function seeMovieInfos(apiKey, movieId, movieType) {
     const plusBtn = createHtmlElement("button", "save-in-list");
 
     plusBtn.dataset.save = movie.id;
+    plusBtn.dataset.type = movieType
 
     const plusIcon = createHtmlElement("i", "fa-solid, fa-plus");
     plusBtn.append(plusIcon);
