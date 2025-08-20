@@ -252,11 +252,11 @@ async function renderMovie(apikey, profileType) {
         `https://api.themoviedb.org/3/${favorite[i].type}/${favorite[i].movieId}?api_key=${apikey}&language=pt-BR`
       );
 
-      movie.type = favorite[i].type
+      movie.type = favorite[i].type;
       movieList.push(movie);
     }
 
-    createListCarousel(movieList, 'Minha lista', apikey)
+    createListCarousel(movieList, "Minha lista", apikey);
   }
 
   for (let i = 0; i < routers.length; i++) {
@@ -326,9 +326,13 @@ function createListCarousel(moviesData, containerTitle, apikey) {
 
     const plusBtn = createHtmlElement("button", "save-in-list");
     plusBtn.dataset.save = movies[i].id;
-    plusBtn.dataset.type = movies[i].type
+    plusBtn.dataset.type = movies[i].type;
+    plusBtn.style.background = "#fff";
+    plusBtn.style.color = "#000";
+    plusBtn.style.borderColor = "#000";
+    plusBtn.disabled = true;
 
-    const plusIcon = createHtmlElement("i", "fa-solid, fa-plus");
+    const plusIcon = createHtmlElement("i", "fa-solid, fa-times");
     plusBtn.append(plusIcon);
 
     const likeBtn = createHtmlElement("button", "like-movie");
@@ -492,7 +496,7 @@ async function createCarouselContainer(
 
     const plusBtn = createHtmlElement("button", "save-in-list");
     plusBtn.dataset.save = movies[i].id;
-    plusBtn.dataset.type = movieType
+    plusBtn.dataset.type = movieType;
 
     const plusIcon = createHtmlElement("i", "fa-solid, fa-plus");
     plusBtn.append(plusIcon);
@@ -539,7 +543,11 @@ async function createCarouselContainer(
       } else {
         movieTime.innerText = `${minuts}m`;
       }
-    } else {
+    } else if (movie.runtime <= 0) {
+      movieTime.innerText = `Sem duração`;
+    }
+    else {
+
       if (movie.seasons.length > 1) {
         movieTime.innerText = `${movie.seasons.length} temporadas`;
       } else {
@@ -753,7 +761,7 @@ function saveMovie(token, profileData) {
       btn.addEventListener("click", async (ev) => {
         const button = ev.currentTarget;
         const movieId = button.dataset.save;
-        const type = button.dataset.type
+        const type = button.dataset.type;
 
         await saveInListReq(token, profileData.id, movieId, type);
 
@@ -766,6 +774,10 @@ function saveMovie(token, profileData) {
         icon.classList.remove("fa-plus");
         icon.classList.add("fa-times");
       });
+    } else {
+      btn.addEventListener('click', (ev) => {
+        console.log(ev.currentTarget)
+      })
     }
   });
 }
@@ -853,7 +865,7 @@ async function seeMovieInfos(apiKey, movieId, movieType) {
     const plusBtn = createHtmlElement("button", "save-in-list");
 
     plusBtn.dataset.save = movie.id;
-    plusBtn.dataset.type = movieType
+    plusBtn.dataset.type = movieType;
 
     const plusIcon = createHtmlElement("i", "fa-solid, fa-plus");
     plusBtn.append(plusIcon);
