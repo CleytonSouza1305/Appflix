@@ -330,7 +330,7 @@ function createListCarousel(moviesData, containerTitle, apikey) {
     plusBtn.style.background = "#fff";
     plusBtn.style.color = "#000";
     plusBtn.style.borderColor = "#000";
-    plusBtn.disabled = true;
+    plusBtn.dataset.saved = true;
 
     const plusIcon = createHtmlElement("i", "fa-solid, fa-times");
     plusBtn.append(plusIcon);
@@ -545,9 +545,7 @@ async function createCarouselContainer(
       }
     } else if (movie.runtime <= 0) {
       movieTime.innerText = `Sem duração`;
-    }
-    else {
-
+    } else {
       if (movie.seasons.length > 1) {
         movieTime.innerText = `${movie.seasons.length} temporadas`;
       } else {
@@ -707,7 +705,47 @@ async function saveInListReq(token, profileId, movieId, type) {
       500
     );
   } catch (e) {
-    console.error(`Erro ao salvar filme, movito: ${e}`);
+    console.error(`Erro ao salvar filme, motivo: ${e}`);
+  } finally {
+    loader.classList.add("display");
+  }
+}
+
+async function removeFromListReq(token, profileId, movieId) {
+  const loader = document.getElementById("loading");
+  loader.classList.remove("display");
+
+  try {
+    const response = await fetch(
+      `https://appflix-api.onrender.com/api/profiles/${profileId}/favorite/${movieId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error(data.message);
+      return;
+    }
+
+    messageAnimated(
+      data.message,
+      4000,
+      "top",
+      "right",
+      "6px",
+      "#4CAF50",
+      "#fff",
+      500
+    );
+  } catch (e) {
+    console.error(`Erro ao deletar filme, motivo: ${e}`);
   } finally {
     loader.classList.add("display");
   }
@@ -738,46 +776,90 @@ function messageAnimated(
   }).showToast();
 }
 
-function saveMovie(token, profileData) {
+function initSaveButtons(token, profileData) {
   const allBtns = document.querySelectorAll(".save-in-list");
 
   allBtns.forEach((btn) => {
-    if (profileData.favorite_list.length > 0) {
-      for (let i = 0; i < profileData.favorite_list.length; i++) {
-        if (Number(btn.dataset.save) === profileData.favorite_list[i].movieId) {
-          btn.style.background = "#fff";
-          btn.style.color = "#000";
-          btn.style.borderColor = "#000";
-          btn.disabled = true;
+    const movieId = Number(btn.dataset.save);
 
-          const icon = btn.querySelector("i");
-          icon.classList.remove("fa-plus");
-          icon.classList.add("fa-times");
-        }
+    const isSaved = profileData.favorite_list.some(
+      (item) => item.movieId === movieId
+    );
+
+    if (isSaved) {
+      if (isSaved) {
+        setButtonSavedStyle(btn);
+        btn.dataset.saved = "true";
+      } else {
+        setButtonUnsavedStyle(btn);
+        btn.dataset.saved = "false";
       }
     }
 
-    if (!btn.disabled) {
+    btn.addEventListener("click", async (ev) => {
+      const button = ev.currentTarget;
+      const movieId = button.dataset.save;
+      const type = button.dataset.type;
+
+      const isCurrentlySaved = button.dataset.saved === "true";
+
+      try {
+        if (isCurrentlySaved) {
+          await removeFromListReq(token, profileData.id, movieId);
+          setButtonUnsavedStyle(button);
+          button.dataset.saved = "false";
+        } else {
+          await saveInListReq(token, profileData.id, movieId, type);
+          setButtonSavedStyle(button);
+          button.dataset.saved = "true";
+        }
+      } catch (err) {
+        console.error("Erro ao salvar/remover filme:", err);
+      }
+    });
+  });
+}
+
+function setButtonSavedStyle(button) {
+  button.style.background = "#fff";
+  button.style.color = "#000";
+  button.style.borderColor = "#000";
+
+  const icon = button.querySelector("i");
+  icon.classList.remove("fa-plus");
+  icon.classList.add("fa-times");
+}
+
+function setButtonUnsavedStyle(button) {
+  button.style.background = "transparent";
+  button.style.color = "#fff";
+  button.style.borderColor = "#fff";
+
+  const icon = button.querySelector("i");
+  icon.classList.remove("fa-times");
+  icon.classList.add("fa-plus");
+}
+
+function deleteMovie(token, profileData) {
+  const allBtns = document.querySelectorAll(".save-in-list");
+
+  allBtns.forEach((btn) => {
+    if (btn.dataset.saved) {
       btn.addEventListener("click", async (ev) => {
         const button = ev.currentTarget;
         const movieId = button.dataset.save;
-        const type = button.dataset.type;
 
-        await saveInListReq(token, profileData.id, movieId, type);
+        await removeFromListReq(token, profileData.id, movieId);
 
-        button.style.background = "#fff";
-        button.style.color = "#000";
-        button.style.borderColor = "#000";
-        button.disabled = true;
+        button.style.background = "transparent";
+        button.style.color = "#fff";
+        button.style.borderColor = "#fff";
+        button.dataset.saved = false;
 
         const icon = button.querySelector("i");
-        icon.classList.remove("fa-plus");
-        icon.classList.add("fa-times");
+        icon.classList.remove("fa-times");
+        icon.classList.add("fa-plus");
       });
-    } else {
-      btn.addEventListener('click', (ev) => {
-        console.log(ev.currentTarget)
-      })
     }
   });
 }
@@ -1387,7 +1469,7 @@ async function startApp(token, profileId) {
   insertProfileData(data, profiles);
 
   setTimeout(() => {
-    saveMovie(token, data);
+    initSaveButtons(token, data);
   }, 1500);
 }
 
