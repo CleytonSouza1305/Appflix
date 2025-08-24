@@ -780,19 +780,14 @@ function initSaveButtons(token, profileData) {
   const allBtns = document.querySelectorAll(".save-in-list");
 
   allBtns.forEach((btn) => {
-    const movieId = Number(btn.dataset.save);
+    const btnMovieId = Number(btn.dataset.save);
 
-    const isSaved = profileData.favorite_list.some(
-      (item) => item.movieId === movieId
-    );
+    for (let i = 0; i < profileData.favorite_list.length; i++) {
+      const movieId = profileData.favorite_list[i].movieId
 
-    if (isSaved) {
-      if (isSaved) {
+      if (movieId === btnMovieId) {
         setButtonSavedStyle(btn);
         btn.dataset.saved = "true";
-      } else {
-        setButtonUnsavedStyle(btn);
-        btn.dataset.saved = "false";
       }
     }
 
@@ -807,11 +802,9 @@ function initSaveButtons(token, profileData) {
         if (isCurrentlySaved) {
           await removeFromListReq(token, profileData.id, movieId);
           setButtonUnsavedStyle(button);
-          button.dataset.saved = "false";
         } else {
           await saveInListReq(token, profileData.id, movieId, type);
           setButtonSavedStyle(button);
-          button.dataset.saved = "true";
         }
       } catch (err) {
         console.error("Erro ao salvar/remover filme:", err);
@@ -828,6 +821,8 @@ function setButtonSavedStyle(button) {
   const icon = button.querySelector("i");
   icon.classList.remove("fa-plus");
   icon.classList.add("fa-times");
+
+  button.dataset.saved = "true";
 }
 
 function setButtonUnsavedStyle(button) {
@@ -838,6 +833,8 @@ function setButtonUnsavedStyle(button) {
   const icon = button.querySelector("i");
   icon.classList.remove("fa-times");
   icon.classList.add("fa-plus");
+
+  button.dataset.saved = "false";
 }
 
 function deleteMovie(token, profileData) {
