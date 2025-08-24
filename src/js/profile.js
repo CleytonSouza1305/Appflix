@@ -287,7 +287,8 @@ function createListCarousel(moviesData, containerTitle, apikey) {
   const carouselWrapper = createHtmlElement("div", `carousel-wrapper`);
   const cards = createHtmlElement(
     "div",
-    `all-cards, track-${title.toLowerCase()}`
+    `all-cards, track-${title.toLowerCase()}`,
+    'my-list'
   );
 
   const movies = moviesData.filter((m) => m.backdrop_path);
@@ -453,7 +454,8 @@ async function createCarouselContainer(
   const carouselWrapper = createHtmlElement("div", `carousel-wrapper`);
   const cards = createHtmlElement(
     "div",
-    `all-cards, track-${title.toLowerCase()}`
+    `all-cards, track-${title.toLowerCase()}`,
+    title.toLowerCase()
   );
 
   const movies = moviesData.filter((m) => m.backdrop_path);
