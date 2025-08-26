@@ -521,7 +521,12 @@ async function createCarouselContainer(
 
     const chevronBtn = createHtmlElement("button", "see-info");
     chevronBtn.dataset.info = movies[i].id;
-    chevronBtn.dataset.type = movieType;
+
+    if (movieType) {
+      chevronBtn.dataset.type = movieType;
+    } else {
+      chevronBtn.dataset.type = movies[i].type;
+    }
 
     const crevronIcon = createHtmlElement("i", "fa-solid, fa-chevron-down");
     chevronBtn.append(crevronIcon);
