@@ -270,10 +270,154 @@ async function renderMovie(apikey, profileType) {
       );
     }
   }
+}
 
-  setTimeout(() => {
-    moveCarousel();
-  }, 2 * 1000);
+function createListCarousel(moviesData, containerTitle, apikey) {
+  const title = containerTitle.replaceAll(" ", "-");
+  const container = createHtmlElement(
+    "div",
+    `container, content-${title.toLowerCase()}`
+  );
+
+  const titleH2 = createHtmlElement("h2");
+  titleH2.innerText = containerTitle;
+
+  const contentCards = createHtmlElement("div", `content-card`);
+
+  const carouselWrapper = createHtmlElement("div", `carousel-wrapper`);
+  const cards = createHtmlElement(
+    "div",
+    `all-cards, track-${title.toLowerCase()}`
+  );
+
+  const movies = moviesData.filter((m) => m.backdrop_path);
+
+  for (let i = 0; i < movies.length; i++) {
+    const card = createHtmlElement("div", `card`);
+    card.dataset.movieId = movies[i].id;
+
+    const movieImage = createHtmlElement("div", `movie-image-div`);
+    const img = createHtmlElement("img");
+    img.src = `https://image.tmdb.org/t/p/w1280${movies[i].backdrop_path}`;
+
+    const title = createHtmlElement("h3");
+    if (movies[i].title) {
+      title.innerText = movies[i].title;
+    } else {
+      title.innerText = movies[i].name;
+    }
+
+    movieImage.append(img, title);
+
+    const contentInfoMovie = createHtmlElement("div", `content-carousel-info`);
+
+    const content = createHtmlElement("div", `content`);
+
+    const buttonsContent = createHtmlElement("div", `content-btn-hovered`);
+
+    const leftBtns = createHtmlElement("div", `left-btn-hovered`);
+    const rightBtns = createHtmlElement("div", `right-btn-hovered`);
+
+    const playBtn = createHtmlElement("button", "play-btn");
+    playBtn.dataset.startmovie = movies[i].id;
+
+    const playIcon = createHtmlElement("i", "fa-solid, fa-play");
+    playBtn.append(playIcon);
+
+    const plusBtn = createHtmlElement("button", "save-in-list");
+    plusBtn.dataset.save = movies[i].id;
+    plusBtn.dataset.type = movies[i].type;
+    plusBtn.style.background = "#fff";
+    plusBtn.style.color = "#000";
+    plusBtn.style.borderColor = "#000";
+    plusBtn.dataset.saved = true;
+
+    const plusIcon = createHtmlElement("i", "fa-solid, fa-times");
+    plusBtn.append(plusIcon);
+
+    const likeBtn = createHtmlElement("button", "like-movie");
+    likeBtn.dataset.likeMovie = movies[i].id;
+
+    const likeIcon = createHtmlElement("i", "fa-regular, fa-thumbs-up");
+    likeBtn.append(likeIcon);
+
+    leftBtns.append(playBtn, plusBtn, likeBtn);
+
+    const chevronBtn = createHtmlElement("button", "see-info");
+    chevronBtn.dataset.info = movies[i].id;
+    chevronBtn.dataset.type = movies[i].type;
+
+    const crevronIcon = createHtmlElement("i", "fa-solid, fa-chevron-down");
+    chevronBtn.append(crevronIcon);
+
+    rightBtns.append(chevronBtn);
+
+    buttonsContent.append(leftBtns, rightBtns);
+
+    const genreContainer = createHtmlElement("div", `content-genres`);
+
+    const genres = movies[i].genres;
+
+    for (let i = 0; i < 2; i++) {
+      if (genres[i] && genres[i].name) {
+        const genre = createHtmlElement("span", `genres`);
+        genre.textContent = genres[i].name;
+        genreContainer.append(genre);
+      }
+    }
+
+    const bottomContent = createHtmlElement("div", `bottom-content`);
+
+    const movieTime = createHtmlElement("p");
+    if (movies[i].runtime) {
+      const hour = Math.floor(movies[i].runtime / 60);
+      const minuts = movies[i].runtime % 60;
+
+      if (hour > 0) {
+        movieTime.innerText = `${hour}h${minuts}m`;
+      } else {
+        movieTime.innerText = `${minuts}m`;
+      }
+    } else {
+      if (movies[i].seasons.length > 1) {
+        movieTime.innerText = `${movies[i].seasons.length} temporadas`;
+      } else {
+        movieTime.innerText = `${movies[i].seasons.length} temporada`;
+      }
+    }
+
+    bottomContent.append(genreContainer, movieTime);
+    content.append(buttonsContent, bottomContent);
+
+    contentInfoMovie.append(content);
+
+    card.append(movieImage, contentInfoMovie);
+
+    cards.append(card);
+  }
+
+  carouselWrapper.append(cards);
+
+  contentCards.append(titleH2, carouselWrapper);
+
+  const buttons = createHtmlElement("div", `button-content`);
+
+  const nextBtn = createHtmlElement(
+    "button",
+    `next-movie, next-${title.toLowerCase()}, fa-solid, fa-angles-right`
+  );
+  const returntBtn = createHtmlElement(
+    "button",
+    `return-movie, return-${title.toLowerCase()}, fa-solid, fa-angles-left`
+  );
+
+  buttons.append(returntBtn, nextBtn);
+  container.append(contentCards, buttons);
+
+  const allContainers = document.querySelector(".all-movie-container");
+  allContainers.append(container);
+
+  movieInfoClicked(apikey);
 }
 
 function movieInfoClicked(apikey) {
@@ -309,7 +453,8 @@ async function createCarouselContainer(
   const carouselWrapper = createHtmlElement("div", `carousel-wrapper`);
   const cards = createHtmlElement(
     "div",
-    `all-cards, track-${title.toLowerCase()}`
+    `all-cards, track-${title.toLowerCase()}`,
+    title.toLowerCase()
   );
 
   const movies = moviesData.filter((m) => m.backdrop_path);
@@ -641,19 +786,14 @@ function initSaveButtons(token, profileData) {
   const allBtns = document.querySelectorAll(".save-in-list");
 
   allBtns.forEach((btn) => {
-    const movieId = Number(btn.dataset.save);
+    const btnMovieId = Number(btn.dataset.save);
 
-    const isSaved = profileData.favorite_list.some(
-      (item) => item.movieId === movieId
-    );
+    for (let i = 0; i < profileData.favorite_list.length; i++) {
+      const movieId = profileData.favorite_list[i].movieId
 
-    if (isSaved) {
-      if (isSaved) {
+      if (movieId === btnMovieId) {
         setButtonSavedStyle(btn);
         btn.dataset.saved = "true";
-      } else {
-        setButtonUnsavedStyle(btn);
-        btn.dataset.saved = "false";
       }
     }
 
@@ -668,11 +808,9 @@ function initSaveButtons(token, profileData) {
         if (isCurrentlySaved) {
           await removeFromListReq(token, profileData.id, movieId);
           setButtonUnsavedStyle(button);
-          button.dataset.saved = "false";
         } else {
           await saveInListReq(token, profileData.id, movieId, type);
           setButtonSavedStyle(button);
-          button.dataset.saved = "true";
         }
       } catch (err) {
         console.error("Erro ao salvar/remover filme:", err);
@@ -689,6 +827,8 @@ function setButtonSavedStyle(button) {
   const icon = button.querySelector("i");
   icon.classList.remove("fa-plus");
   icon.classList.add("fa-times");
+
+  button.dataset.saved = "true";
 }
 
 function setButtonUnsavedStyle(button) {
@@ -699,6 +839,8 @@ function setButtonUnsavedStyle(button) {
   const icon = button.querySelector("i");
   icon.classList.remove("fa-times");
   icon.classList.add("fa-plus");
+
+  button.dataset.saved = "false";
 }
 
 function deleteMovie(token, profileData) {
