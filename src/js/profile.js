@@ -506,7 +506,12 @@ async function createCarouselContainer(
 
     const plusBtn = createHtmlElement("button", "save-in-list");
     plusBtn.dataset.save = movies[i].id;
-    plusBtn.dataset.type = movieType;
+
+    if (movieType) {
+      plusBtn.dataset.type = movieType;
+    } else {
+      plusBtn.dataset.type = movies[i].type;
+    }
 
     const plusIcon = createHtmlElement("i", "fa-solid, fa-plus");
     plusBtn.append(plusIcon);
