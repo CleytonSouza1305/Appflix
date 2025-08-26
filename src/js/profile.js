@@ -270,6 +270,10 @@ async function renderMovie(apikey, profileType) {
       );
     }
   }
+
+  setTimeout(() => {
+    moveCarousel();
+  }, 2 * 1000);
 }
 
 function createListCarousel(moviesData, containerTitle, apikey) {
