@@ -301,6 +301,10 @@ async function createCarouselContainer(
     `container, content-${title.toLowerCase()}`
   );
 
+  if (!movieType) {
+    container.id = 'my-list'
+  }
+
   const titleH2 = createHtmlElement("h2");
   titleH2.innerText = containerTitle;
 
