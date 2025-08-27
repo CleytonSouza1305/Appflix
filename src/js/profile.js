@@ -177,6 +177,14 @@ function goToKidsProfile(data) {
   }
 }
 
+function embaralharArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]]; 
+  }
+  return array;
+}
+
 async function renderMovie(apikey, profileType) {
   let routers = [];
 
@@ -259,13 +267,15 @@ async function renderMovie(apikey, profileType) {
     createCarouselContainer(movieList, "Minha lista", undefined, apikey);
   }
 
-  for (let i = 0; i < routers.length; i++) {
-    const data = await tmdbApi(routers[i].endpoint);
+  const arrEmbaralhado = embaralharArray(routers);
+
+  for (let i = 0; i < arrEmbaralhado.length; i++) {
+    const data = await tmdbApi(arrEmbaralhado[i].endpoint);
     if (data) {
       createCarouselContainer(
         data.results,
-        routers[i].title,
-        routers[i].type,
+        arrEmbaralhado[i].title,
+        arrEmbaralhado[i].type,
         apikey
       );
     }
