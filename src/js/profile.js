@@ -250,6 +250,7 @@ async function renderMovie(apikey, profileType) {
   const profileId = localStorage.getItem("profileId");
 
   const profileDataArr = await profileData(token, profileId);
+  console.log(profileDataArr)
 
   if (profileDataArr.favorite_list.length > 0) {
     const movieList = [];
@@ -287,16 +288,27 @@ async function renderMovie(apikey, profileType) {
 }
 
 function movieInfoClicked(apikey) {
-  const seeInfoBtn = document.querySelectorAll(".see-info");
+  const allContainers = document.querySelector(".all-movie-container");
 
-  seeInfoBtn.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const movieId = btn.dataset.info;
-      const movieType = btn.dataset.type;
+  allContainers.onclick = (e) => {
+    const btn = e.target.closest(".see-info");
+    if (!btn) return;
 
-      seeMovieInfos(apikey, movieId, movieType);
-    });
-  });
+    const movieId = btn.dataset.info;
+    const movieType = btn.dataset.type;
+
+    seeMovieInfos(apikey, movieId, movieType);
+
+    const profileId = localStorage.getItem('profileId');
+    const token = localStorage.getItem('token');
+
+    if (!profileId || !token) {
+      window.location.reload();
+      return;
+    }
+
+    addHistory(profileId, movieId, movieType, token);
+  };
 }
 
 async function createCarouselContainer(
@@ -1053,6 +1065,28 @@ async function seeMovieInfos(apiKey, movieId, movieType) {
   }
 }
 
+async function addHistory(profileId, movieId, movieType, token) {
+  try {
+    const response = await fetch(
+      `https://appflix-api.onrender.com/api/profiles/${profileId}/history/${movieId}/${movieType}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+    })
+
+    const data = await response.json()
+
+    if (!response.ok) {
+      throw new Error(data.message)
+    }
+  } catch (e) {
+    console.error(`Erro ao adicionar novo history, motivo: ${e.message}`)
+  }
+}
+
 async function insertTmdbVideo(apiKey, profileType) {
   let movie;
   const videoType = [{ type: "movie" }, { type: "tv" }];
@@ -1221,6 +1255,16 @@ async function insertTmdbVideo(apiKey, profileType) {
       const movieId = element.id.split("-")[1];
 
       seeMovieInfos(apiKey, movieId, randomType.type);
+
+      const profileId = localStorage.getItem('profileId')
+      const token = localStorage.getItem('token')
+
+      if (!profileId || !token) {
+        window.location.reload()
+        return
+      }
+
+      addHistory(profileId, movieId, randomType.type, token)
     });
   }
 
