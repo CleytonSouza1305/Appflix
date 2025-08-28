@@ -250,7 +250,6 @@ async function renderMovie(apikey, profileType) {
   const profileId = localStorage.getItem("profileId");
 
   const profileDataArr = await profileData(token, profileId);
-  console.log(profileDataArr)
 
   if (profileDataArr.favorite_list.length > 0) {
     const movieList = [];
@@ -267,6 +266,11 @@ async function renderMovie(apikey, profileType) {
 
     createCarouselContainer(movieList, "Minha lista", undefined, apikey);
   }
+  
+  if (profileDataArr.historyCount) {
+    seeMovieRelated(apikey, profileDataArr.historyCount.movieId, profileDataArr.historyCount.type)
+  }
+  
 
   const arrEmbaralhado = embaralharArray(routers);
 
@@ -284,7 +288,21 @@ async function renderMovie(apikey, profileType) {
 
   setTimeout(() => {
     moveCarousel();
+    initSaveButtons(token, profileDataArr)
   }, 2 * 1000);
+}
+
+async function seeMovieRelated(apikey, movieId, movieType) {
+  const randomPage = Math.floor(Math.random() * 10) + 1;
+  const endpoint = `https://api.themoviedb.org/3/${movieType}/${movieId}/similar?api_key=${apikey}&language=pt-BR&page=${randomPage}`;
+  const data = await tmdbApi(endpoint)
+
+  if (data && data.results && data.results.length > 0) {
+    await createCarouselContainer(data.results, "Talvez você goste", movieType, apikey);
+
+    moveCarousel()
+    
+  }
 }
 
 function movieInfoClicked(apikey) {
@@ -870,7 +888,7 @@ async function seeMovieInfos(apiKey, movieId, movieType) {
     const topData = createHtmlElement("div", "top-data-mid");
 
     const releaseDate = createHtmlElement("p", "release-date");
-
+    
     if (movie.release_date) {
       const date = new Date(movie.release_date);
       releaseDate.innerText = date.toLocaleDateString("pt-BR", {
@@ -1390,10 +1408,6 @@ async function startApp(token, profileId) {
   const data = await profileData(token, profileId);
   const profiles = await searchProfile(token);
   insertProfileData(data, profiles);
-
-  setTimeout(() => {
-    initSaveButtons(token, data);
-  }, 1500);
 }
 
 async function validateToken(token, path) {
