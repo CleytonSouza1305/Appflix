@@ -180,7 +180,7 @@ function goToKidsProfile(data) {
 function embaralharArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]]; 
+    [array[i], array[j]] = [array[j], array[i]];
   }
   return array;
 }
@@ -266,11 +266,15 @@ async function renderMovie(apikey, profileType) {
 
     createCarouselContainer(movieList, "Minha lista", undefined, apikey);
   }
-  
+
   if (profileDataArr.historyCount) {
-    seeMovieRelated(apikey, profileDataArr.historyCount.movieId, profileDataArr.historyCount.type)
+    seeMovieRelated(
+      apikey,
+      profileDataArr.historyCount.movieId,
+      profileDataArr.historyCount.type,
+      profileDataArr.is_kid
+    );
   }
-  
 
   const arrEmbaralhado = embaralharArray(routers);
 
@@ -288,20 +292,30 @@ async function renderMovie(apikey, profileType) {
 
   setTimeout(() => {
     moveCarousel();
-    initSaveButtons(token, profileDataArr)
+    initSaveButtons(token, profileDataArr);
   }, 2 * 1000);
 }
 
-async function seeMovieRelated(apikey, movieId, movieType) {
+async function seeMovieRelated(apikey, movieId, movieType, isKid) {
+  let data;
   const randomPage = Math.floor(Math.random() * 10) + 1;
-  const endpoint = `https://api.themoviedb.org/3/${movieType}/${movieId}/similar?api_key=${apikey}&language=pt-BR&page=${randomPage}`;
-  const data = await tmdbApi(endpoint)
+
+  if (!isKid) {
+    const endpoint = `https://api.themoviedb.org/3/${movieType}/${movieId}/similar?api_key=${apikey}&language=pt-BR&page=${randomPage}`;
+    data = await tmdbApi(endpoint);
+  } else {
+    const endpoint = `https://api.themoviedb.org/3/discover/${movieType}?api_key=${apikey}&language=pt-BR&sort_by=popularity.desc&with_genres=16&certification_country=BR&certification.lte=L&page=${randomPage}`;
+
+    data = await tmdbApi(endpoint);
+  }
 
   if (data && data.results && data.results.length > 0) {
-    await createCarouselContainer(data.results, "Talvez você goste", movieType, apikey);
-
-    moveCarousel()
-    
+    await createCarouselContainer(
+      data.results,
+      "Talvez você goste",
+      movieType,
+      apikey
+    );
   }
 }
 
@@ -317,8 +331,8 @@ function movieInfoClicked(apikey) {
 
     seeMovieInfos(apikey, movieId, movieType);
 
-    const profileId = localStorage.getItem('profileId');
-    const token = localStorage.getItem('token');
+    const profileId = localStorage.getItem("profileId");
+    const token = localStorage.getItem("token");
 
     if (!profileId || !token) {
       window.location.reload();
@@ -342,7 +356,7 @@ async function createCarouselContainer(
   );
 
   if (!movieType) {
-    container.id = 'my-list'
+    container.id = "my-list";
   }
 
   const titleH2 = createHtmlElement("h2");
@@ -501,6 +515,7 @@ async function createCarouselContainer(
   allContainers.append(container);
 
   movieInfoClicked(apikey);
+  moveCarousel();
 }
 
 function moveCarousel() {
@@ -699,7 +714,7 @@ function initSaveButtons(token, profileData) {
     const btnMovieId = Number(btn.dataset.save);
 
     for (let i = 0; i < profileData.favorite_list.length; i++) {
-      const movieId = profileData.favorite_list[i].movieId
+      const movieId = profileData.favorite_list[i].movieId;
 
       if (movieId === btnMovieId) {
         setButtonSavedStyle(btn);
@@ -888,7 +903,7 @@ async function seeMovieInfos(apiKey, movieId, movieType) {
     const topData = createHtmlElement("div", "top-data-mid");
 
     const releaseDate = createHtmlElement("p", "release-date");
-    
+
     if (movie.release_date) {
       const date = new Date(movie.release_date);
       releaseDate.innerText = date.toLocaleDateString("pt-BR", {
@@ -1093,15 +1108,16 @@ async function addHistory(profileId, movieId, movieType, token) {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-    })
+      }
+    );
 
-    const data = await response.json()
+    const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.message)
+      throw new Error(data.message);
     }
   } catch (e) {
-    console.error(`Erro ao adicionar novo history, motivo: ${e.message}`)
+    console.error(`Erro ao adicionar novo history, motivo: ${e.message}`);
   }
 }
 
@@ -1274,15 +1290,15 @@ async function insertTmdbVideo(apiKey, profileType) {
 
       seeMovieInfos(apiKey, movieId, randomType.type);
 
-      const profileId = localStorage.getItem('profileId')
-      const token = localStorage.getItem('token')
+      const profileId = localStorage.getItem("profileId");
+      const token = localStorage.getItem("token");
 
       if (!profileId || !token) {
-        window.location.reload()
-        return
+        window.location.reload();
+        return;
       }
 
-      addHistory(profileId, movieId, randomType.type, token)
+      addHistory(profileId, movieId, randomType.type, token);
     });
   }
 
