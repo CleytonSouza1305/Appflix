@@ -264,11 +264,11 @@ async function renderMovie(apikey, profileType) {
       movieList.push(movie);
     }
 
-    createCarouselContainer(movieList, "Minha lista", undefined, apikey);
+    await createCarouselContainer(movieList, "Minha lista", undefined, apikey);
   }
 
   if (profileDataArr.historyCount) {
-    seeMovieRelated(
+    await seeMovieRelated(
       apikey,
       profileDataArr.historyCount.movieId,
       profileDataArr.historyCount.type,
@@ -281,7 +281,7 @@ async function renderMovie(apikey, profileType) {
   for (let i = 0; i < arrEmbaralhado.length; i++) {
     const data = await tmdbApi(arrEmbaralhado[i].endpoint);
     if (data) {
-      createCarouselContainer(
+      await createCarouselContainer(
         data.results,
         arrEmbaralhado[i].title,
         arrEmbaralhado[i].type,
@@ -291,9 +291,10 @@ async function renderMovie(apikey, profileType) {
   }
 
   setTimeout(() => {
-    moveCarousel();
     initSaveButtons(token, profileDataArr);
   }, 2 * 1000);
+
+  moveCarousel();
 }
 
 async function seeMovieRelated(apikey, movieId, movieType, isKid) {
@@ -515,7 +516,6 @@ async function createCarouselContainer(
   allContainers.append(container);
 
   movieInfoClicked(apikey);
-  moveCarousel();
 }
 
 function moveCarousel() {
