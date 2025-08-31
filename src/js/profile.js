@@ -872,7 +872,11 @@ async function seeMovieInfos(apiKey, movieId, movieType) {
     const playIcon = createHtmlElement("i", "fa-solid, fa-play");
     playBtn.append(playIcon, "Assistir");
 
-    const plusBtn = createHtmlElement("button", "save-in-list");
+    const plusBtn = createHtmlElement(
+      "button",
+      "save-in-list",
+      "btn-save-info"
+    );
 
     plusBtn.dataset.save = movie.id;
     plusBtn.dataset.type = movieType;
@@ -1095,6 +1099,47 @@ async function seeMovieInfos(apiKey, movieId, movieType) {
         modal.classList.add("display");
       });
     }
+  }
+
+  const saveBtn = document.getElementById("btn-save-info");
+
+  const token = localStorage.getItem("token");
+  const profileId = localStorage.getItem("profileId");
+
+  if (!token) {
+    window.location.reload();
+    return;
+  }
+
+  const profile = await profileData(token, profileId);
+  if (saveBtn) {
+    const movieId = saveBtn.dataset.save;
+    const movieType = saveBtn.dataset.type;
+
+    const isSaved = profile.favorite_list.filter((m) => m.movieId === Number(movieId))
+    let isCurrentlySaved;
+    if (isSaved.length > 0) {
+      setButtonSavedStyle(saveBtn);
+      isCurrentlySaved = saveBtn.dataset.saved === "true";
+    }
+
+    saveBtn.onclick = async (ev) => {
+      if (profileId) {
+        try {
+          if (isCurrentlySaved) {
+            await removeFromListReq(token, profileId, movieId);
+            isCurrentlySaved = saveBtn.dataset.saved === "false";
+            setButtonUnsavedStyle(saveBtn);
+          } else {
+            await saveInListReq(token, profileId, movieId, movieType);
+            isCurrentlySaved = saveBtn.dataset.saved === "true";
+            setButtonSavedStyle(saveBtn);
+          }
+        } catch (err) {
+          console.error("Erro ao salvar/remover filme:", err);
+        }
+      }
+    };
   }
 }
 
