@@ -48,8 +48,12 @@
       </div>
 
       <div class="right-navgation">
-        <div class="rigth-content">
-          <i class="fa-solid fa-magnifying-glass"></i>
+        <div class="rigth-content search-container">
+          <input type="search" id="search-input" autocomplete="off">
+          <ul id="suggestions" class="suggestions-list"></ul>
+          <button id="search-btn">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
         </div>
         <div class="rigth-content">
           <span id="go-to-kids-profile">Infantil</span>
@@ -131,6 +135,14 @@
     </div>
 
     <div class="all-movie-container"></div>
+
+    <div class="searched-movie-data display">
+      <div class="cancel-content">
+        <i class="fa-solid fa-x"></i>
+      </div>
+      <h2 id="movie-not-found"></h2>
+      <div class="movies"></div>
+    </div>
 
     <script src="../js/profile.js"></script>
     <script src="https://www.youtube.com/iframe_api"></script>

@@ -1418,6 +1418,172 @@ async function insertProfileData(data, allProfiles) {
 
   const apiKeyTmdb = "1bba4a82f9810b816a081e47cde96c2b";
   await insertTmdbVideo(apiKeyTmdb, data.is_kid);
+
+  openSearchInput(apiKeyTmdb);
+}
+
+function openSearchInput(apikey) {
+  const input = document.getElementById("search-input");
+  const btn = document.getElementById("search-btn");
+  const suggestionsList = document.getElementById("suggestions");
+  const modal = document.querySelector(".searched-movie-data");
+  const closeModalBtn = document.querySelector(".cancel-content");
+
+  let timeout;
+
+  btn.addEventListener("click", () => {
+    input.classList.toggle("search-input-open");
+    if (input.classList.contains("search-input-open")) {
+      input.focus();
+    }
+  });
+
+  input.addEventListener("input", () => {
+    clearTimeout(timeout);
+
+    const query = input.value.trim();
+    if (!query) {
+      suggestionsList.style.display = "none";
+      suggestionsList.innerHTML = "";
+      return;
+    }
+
+    timeout = setTimeout(async () => {
+      const res = await fetch(
+        `https://api.themoviedb.org/3/search/multi?api_key=${apikey}&query=${encodeURIComponent(
+          query
+        )}&language=pt-BR`
+      );
+      const data = await res.json();
+
+      suggestionsList.innerHTML = "";
+      if (!data.results || !data.results.length) return;
+
+      suggestionsList.style.display = "block";
+      const MAX_SUGGESTIONS = 6;
+
+      data.results.slice(0, MAX_SUGGESTIONS).forEach((item) => {
+        let title = item.title || item.name;
+        const li = document.createElement("li");
+        li.textContent = title;
+
+        li.addEventListener("click", () => {
+          input.value = title;
+          suggestionsList.innerHTML = "";
+          suggestionsList.style.display = "none";
+          showResults(apikey, title);
+        });
+
+        suggestionsList.appendChild(li);
+      });
+    }, 300);
+  });
+
+  input.addEventListener("keypress", (e) => {
+    if (e.key === "Enter" && input.value.trim() !== "") {
+      e.preventDefault();
+      suggestionsList.innerHTML = "";
+      suggestionsList.style.display = "none";
+      showResults(apikey, input.value.trim());
+    }
+  });
+
+  closeModalBtn.addEventListener("click", () => {
+    input.value = "";
+    suggestionsList.innerHTML = "";
+    suggestionsList.style.display = "none";
+    modal.classList.add("display");
+  });
+
+  async function showResults(apikey, query) {
+    const modalContent = modal.querySelector(".movies");
+    const h2 = document.getElementById("movie-not-found");
+
+    const res = await fetch(
+      `https://api.themoviedb.org/3/search/multi?api_key=${apikey}&query=${encodeURIComponent(
+        query
+      )}&language=pt-BR`
+    );
+    const data = await res.json();
+    modal.classList.remove("display");
+
+    if (!data.results || !data.results.length) {
+      modalContent.innerHTML = "";
+      h2.innerHTML = `
+        <h2>Nenhum resultado encontrado para "${query}"</h2>
+      `;
+      return;
+    }
+
+    h2.innerHTML = `
+        <h2>Resultados encontrados para "${query}"</h2>
+      `;
+    modalContent.innerHTML = "";
+
+    const movies = data.results;
+    for (let i = 0; i < movies.length; i++) {
+      if (movies[i].poster_path) {
+        const cardContent = createHtmlElement("div", "movie-card-content");
+        const card = createHtmlElement("div", "movie-card");
+
+        const moviePoster = createHtmlElement("div", "movie-poster");
+        const img = createHtmlElement("img");
+        img.src = `https://image.tmdb.org/t/p/w200${movies[i].poster_path}`;
+        moviePoster.append(img);
+
+        const title = movies[i].title || movies[i].name;
+        const titleTxt = createHtmlElement("h3", "movie-title-searched");
+        titleTxt.textContent = title;
+
+        const dataMovie = createHtmlElement("div", "movie-data-div");
+
+        if (movies[i].first_air_date) {
+          const postDate = new Date(movies[i].first_air_date);
+          const date = createHtmlElement("span");
+          date.textContent = postDate.toLocaleDateString("pt-BR", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          });
+
+          dataMovie.append(date);
+        }
+
+        const moreInfoBtn = createHtmlElement("button", "see-info-searched");
+        moreInfoBtn.textContent = `Ver detalhes`;
+        moreInfoBtn.dataset.info = movies[i].id;
+        moreInfoBtn.dataset.type = movies[i].media_type;
+
+        dataMovie.append(moreInfoBtn);
+
+        card.append(moviePoster, titleTxt, dataMovie);
+        cardContent.append(card);
+        modalContent.append(cardContent);
+      }
+    }
+
+    const btns = document.querySelectorAll(".see-info-searched");
+    btns.forEach((btn) => {
+      btn.onclick = (e) => {
+        const btn = e.target;
+
+        const movieId = btn.dataset.info;
+        const movieType = btn.dataset.type;
+
+        seeMovieInfos(apikey, movieId, movieType);
+
+        const profileId = localStorage.getItem("profileId");
+        const token = localStorage.getItem("token");
+
+        if (!profileId || !token) {
+          window.location.reload();
+          return;
+        }
+
+        addHistory(profileId, movieId, movieType, token);
+      };
+    });
+  }
 }
 
 async function startApp(token, profileId) {
