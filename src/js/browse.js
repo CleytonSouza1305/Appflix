@@ -640,6 +640,29 @@ async function verifyUser(token) {
   });
 }
 
+async function validateUserRole(token, userId) {
+  try {
+    const response = await fetch(`https://appflix-api.onrender.com/auth/users/${userId}/`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch user role");
+    }
+
+    const data = await response.json();
+    console.log(data)
+    return data.role === "admin";
+  } catch (error) {
+    console.error(`Error validating user role: ${error}`);
+    return false;
+  }
+}
+
 async function startApp(token) {
   const data = await searchProfile(token);
   createCardProfile(data);
@@ -648,6 +671,17 @@ async function startApp(token) {
   editProfile(token);
 
   verifyUser(token);
+
+  const isAdmin = await validateUserRole(token, data[0].userId);
+  if (isAdmin) {
+    const btn = document.querySelector('#goToAdmin')
+
+    btn.disabled = false;
+    const adminPanel = document.querySelector(".admin");
+    adminPanel.classList.remove("display");
+
+    localStorage.setItem('userId', data[0].userId)
+  }
 }
 
 async function validateToken(token, path) {

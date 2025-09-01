@@ -102,6 +102,7 @@ header .right-navgation .rigth-content.search-container {
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  padding-left: .5rem;
 }
 
 .suggestions-list {

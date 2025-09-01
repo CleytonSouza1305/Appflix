@@ -14,6 +14,26 @@ body {
   overflow-x: hidden;
 }
 
+.admin {
+  padding: 1rem 0 0 1rem;
+}
+
+.admin button {
+  background-color: var(--primary-color);
+  color: var(--white-color);
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 300ms ease-in-out;
+  border: 2px solid transparent;
+}
+
+.admin button:hover {
+  background-color: hsl(357, 92%, 37%);
+  border-color: var(--primary-color);
+}
+
 main {
   width: 100%;
   height: 100%;
