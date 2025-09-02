@@ -111,6 +111,41 @@ body {
   padding: 20px;
   border-radius: 8px;
   text-align: center;
+  position: relative;
+}
+
+.card .little-ball {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  animation: blink 1.5s infinite ease-in-out;
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.2;
+  }
+}
+
+.card .little-ball.green-ball {
+  background: #63e667;
+  animation-delay: 0s;
+}
+
+.card .little-ball.yellow-ball {
+  background: #ffeb3b;
+  animation-delay: 0.3s;
+}
+
+.card .little-ball.blue-ball {
+  background: #2196f3;
+  animation-delay: 0.6s;
 }
 
 .card h3 {

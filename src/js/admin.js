@@ -66,6 +66,78 @@ async function getUsers(token, query) {
   }
 }
 
+function renderTable(users, tbody) {
+  tbody.innerHTML = "";
+
+  users.forEach((u) => {
+    const tr = document.createElement("tr");
+
+    const createdAt = new Date(u.createdAt);
+    const createdAtTxt = createdAt.toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+
+    let userStatus = u.isActive ? "Ativo" : "Inativo";
+
+    tr.innerHTML = `
+      <td>${u.name}</td>
+      <td>${u.email}</td>
+      <td>${u.phone}</td>
+      <td>${u.plan}</td>
+      <td>${userStatus}</td>
+      <td>${createdAtTxt}</td>
+    `;
+
+    tbody.append(tr);
+  });
+
+  console.log(users)
+}
+
+function renderPagination(pagination, value, tbody, table, token) {
+  const section = document.querySelector(".table-section");
+  const oldPaginator = section.querySelector(".change-container");
+  if (oldPaginator) oldPaginator.remove();
+
+  const changeContainer = document.createElement("div");
+  changeContainer.classList.add("change-container");
+
+  const totalPages = Number(pagination.totalPages);
+  const currentPage = Number(pagination.page);
+
+  const startPage = Math.max(1, currentPage - 2);
+  const endPage = Math.min(totalPages, startPage + 4);
+
+  for (let i = startPage; i <= endPage; i++) {
+    const page = document.createElement("span");
+    page.textContent = i;
+    page.dataset.page = i;
+    page.classList.add("page-btn");
+
+    if (i === currentPage) {
+      page.classList.add("page-active");
+    }
+
+    page.addEventListener("click", async () => {
+      if (i === currentPage) return
+
+      const actualPageData = await getUsers(
+        token,
+        `?search=${value}&limit=5&page=${i}`
+      );
+
+      renderTable(actualPageData.users, tbody);
+      renderPagination(actualPageData.pagination, value, tbody, table, token);
+    });
+
+    changeContainer.appendChild(page);
+  }
+
+  section.append(changeContainer);
+}
+
 async function searchUser(token) {
   const section = document.querySelector(".table-section");
   section.innerHTML = "";
@@ -97,12 +169,10 @@ async function searchUser(token) {
 
     const input = document.getElementById("search-user-input");
     const value = input.value.trim();
-
     if (!value) return;
 
     const response = await getUsers(token, `?search=${value}&limit=5`);
     const users = response.users;
-    console.log(users);
 
     input.value = "";
     table.innerHTML = "";
@@ -113,9 +183,7 @@ async function searchUser(token) {
     if (users.length < 1) {
       const notFound = document.createElement("h3");
       notFound.classList.add("not-found-user");
-
       notFound.textContent = "Nenhum usuário encontrado.";
-
       section.append(notFound);
       return;
     }
@@ -124,68 +192,21 @@ async function searchUser(token) {
 
     const thead = document.createElement("thead");
     thead.innerHTML = `
-      <tr>
-        <th>Nome</th>
-        <th>Email</th>
-        <th>Telefone</th>
-        <th>Plano</th>
-        <th>Status</th>
-        <th>Criado em</th>
-      </tr>
-    `;
-
+    <tr>
+      <th>Nome</th>
+      <th>Email</th>
+      <th>Telefone</th>
+      <th>Plano</th>
+      <th>Status</th>
+      <th>Criado em</th>
+    </tr>
+  `;
     const tbody = document.createElement("tbody");
-    users.forEach((u) => {
-      const tr = document.createElement("tr");
 
-      const createdAt = new Date(u.createdAt);
-      const createdAtTxt = createdAt.toLocaleDateString("pt-BR", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      });
-
-      let userStatus = "Ativo";
-
-      if (!u.isActive) userStatus = "Inativo";
-
-      tr.innerHTML = `
-        <td>${u.name}</td>
-        <td>${u.email}</td>
-        <td>${u.phone}</td>
-        <td>${u.plan}</td>
-        <td>${userStatus}</td>
-        <td>${createdAtTxt}</td>
-      `;
-
-      tbody.append(tr);
-    });
-
+    renderTable(users, tbody);
     table.append(thead, tbody);
 
-    const oldPaginator = section.querySelector(".change-container");
-    if (oldPaginator) oldPaginator.remove();
-
-    const changeContainer = document.createElement("div");
-    changeContainer.classList.add("change-container");
-
-    const totalPages = response.pagination.totalPages;
-    const currentPage = response.pagination.page
-
-    const startPage = Math.max(1, currentPage - 2);
-    const endPage = Math.min(totalPages, startPage + 4);
-
-    for (let i = startPage; i <= endPage; i++) {
-      const page = document.createElement("span");
-      page.textContent = i;
-      page.dataset.page = i;
-      page.classList.add("page-btn");
-      if (i === currentPage) page.classList.add("page-active"); 
-
-      changeContainer.appendChild(page);
-    }
-
-    section.append(changeContainer);
+    renderPagination(response.pagination, value, tbody, table, token);
   });
 
   searchForm.append(input, sbmButton);
@@ -204,7 +225,6 @@ async function insertAdminData(token, adminData) {
   );
 
   const response = await getUsers(token);
-  console.log(response);
 
   const totalUsers = document.getElementById("total-users");
   totalUsers.textContent = response.pagination.total;
@@ -248,7 +268,7 @@ async function insertAdminData(token, adminData) {
 
       switch (id) {
         case "dashboard":
-          console.log("dashboard");
+          location.reload()
           break;
 
         case "usuarios":
