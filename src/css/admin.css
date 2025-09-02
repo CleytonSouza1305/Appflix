@@ -151,6 +151,82 @@ tbody tr:hover {
   background: #222;
 }
 
+.table-section header.header-usuarios {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.table-section header.header-usuarios form {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: .5rem;
+}
+
+.table-section header.header-usuarios span {
+  color: #e3e3e3;
+  font-weight: 500;
+}
+
+.table-section header.header-usuarios input {
+  width: 100%;
+  background-color: transparent;
+  border: 1px solid #555;
+  padding: .5rem .8rem;
+  border-radius: 4px;
+  transition: ease-in-out 200ms;
+  color: var(--white-color);
+}
+
+.table-section header.header-usuarios input:focus,
+.table-section header.header-usuarios input:hover,
+.table-section header.header-usuarios button:hover {
+  border-color: #cacaca;
+}
+
+.table-section header.header-usuarios button {
+  color: #555;
+  transition: ease-in-out 200ms;
+  border: 1px solid #555;
+  border-radius: 4px;
+  padding: .4rem;
+}
+
+.table-section header.header-usuarios button:hover {
+  color: #cacaca;
+  background-color: #4c4c4c;
+}
+
+.table-section h3 {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-weight: 400;
+  color: hsl(0, 0%, 57%);
+}
+
+.table-section .change-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  margin-top: 1.5rem;
+}
+
+.table-section .change-container span {
+  padding: .5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid hsl(357, 92%, 57%);
+}
+
+.page-active {
+  background-color: var(--primary-color);
+}
+
 .display {
   display: none;
 }
