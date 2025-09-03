@@ -262,6 +262,34 @@ tbody tr:hover {
   background-color: var(--primary-color);
 }
 
+.update-user-tbody {
+  cursor: pointer;
+  transition: ease-in-out 200ms;
+}
+
+.update-user-tbody:hover tr {
+  background-color: hsl(0, 0%, 20%);
+}
+
+.update-user-container {
+  margin-top: 1rem;
+}
+
+.update-user-container input {
+  width: 100%;
+  background-color: transparent;
+  border-bottom: 1px solid hsl(0, 0%, 43%);
+  padding: .5rem .5rem;
+  border-radius: 4px;
+  transition: ease-in-out 200ms;
+  color: var(--white-color);
+  margin-bottom: .8rem;
+}
+
+.update-user-container input:hover {
+  border-bottom: 1px solid #cacaca;
+}
+
 .display {
   display: none;
 }

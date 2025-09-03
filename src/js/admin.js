@@ -18,8 +18,7 @@ async function userData(token, id) {
 
     if (!response.ok) {
       console.error(`Erro na requisição, motivo: ${data.message}`);
-      location.href = "./login.html";
-      return;
+      return []
     }
 
     return data;
@@ -54,7 +53,7 @@ async function getUsers(token, query) {
 
     if (!response.ok) {
       console.error(`Erro na requisição, motivo: ${data.message}`);
-      location.href = "./login.html";
+      // location.href = "./login.html";
       return;
     }
 
@@ -71,8 +70,9 @@ function renderTable(users, tbody) {
 
   users.forEach((u) => {
     const tr = document.createElement("tr");
+    const createdAtData = u.createdAt || u.created_at
 
-    const createdAt = new Date(u.createdAt);
+    const createdAt = new Date(createdAtData);
     const createdAtTxt = createdAt.toLocaleDateString("pt-BR", {
       day: "2-digit",
       month: "2-digit",
@@ -214,6 +214,125 @@ async function searchUser(token) {
   section.append(h2, header);
 }
 
+async function updateUser(token) {
+  const section = document.querySelector(".table-section");
+  section.innerHTML = "";
+
+  const h2 = document.createElement("h2");
+  h2.textContent = "Atualizar usuário";
+
+  const table = document.createElement("table");
+
+  const header = document.createElement("header");
+  header.classList.add("header-usuarios");
+  header.innerHTML = "";
+
+  const span = document.createElement("span");
+  span.textContent = "Buscar:";
+
+  const searchForm = document.createElement("form");
+  const input = document.createElement("input");
+  input.id = "search-user-input";
+  input.type = "text";
+  input.placeholder = "Buscar usuário por ID";
+
+  const sbmButton = document.createElement("button");
+  sbmButton.id = "search-btn";
+  sbmButton.innerHTML = '<i class="fa-solid fa-paper-plane"></i>';
+
+  searchForm.addEventListener("submit", async (ev) => {
+    ev.preventDefault();
+
+    const contentDt = section.querySelector(".update-user-container")
+    if (contentDt) contentDt.remove()
+
+    const input = document.getElementById("search-user-input");
+    const value = input.value.trim();
+    if (!value) return;
+
+    const response = await userData(token, value);
+    const user = response;
+
+    input.value = "";
+    table.innerHTML = "";
+
+    const oldMsg = section.querySelector(".not-found-user");
+    if (oldMsg) oldMsg.remove();
+
+    if (user.length < 1) {
+      const notFound = document.createElement("h3");
+      notFound.classList.add("not-found-user");
+      notFound.textContent = "Nenhum usuário encontrado.";
+      section.append(notFound);
+      return;
+    }
+
+    section.append(table);
+
+    const thead = document.createElement("thead");
+    thead.innerHTML = `
+    <tr>
+      <th>Nome</th>
+      <th>Email</th>
+      <th>Telefone</th>
+      <th>Plano</th>
+      <th>Status</th>
+      <th>Criado em</th>
+    </tr>
+  `;
+    const tbody = document.createElement("tbody");
+    tbody.classList.add('update-user-tbody')
+
+    renderTable([user], tbody);
+    table.append(thead, tbody);
+
+    tbody.addEventListener('click', (ev) => {
+      const dataContent = section.querySelector(".update-user-container")
+      if (dataContent) return
+
+      const content = document.createElement("div")
+      content.classList.add("update-user-container")
+
+      const table = document.createElement('table')
+      table.classList.add('update-user-table')
+
+      const createdAtData = user.createdAt || user.created_at
+
+      const createdAt = new Date(createdAtData);
+      const createdAtTxt = createdAt.toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
+
+      const tbody = document.createElement('tbody')
+      let userStatus = "Ativo";
+      if (!user.isActive) userStatus = "Inativo";
+      tbody.innerHTML = `
+        <tr>
+          <td><input class="update-input" type="text" value="${user.name}" /></td>
+          <td><input class="update-input" type="text" value="${user.email}" /></td>
+          <td><input class="update-input" type="text" value="${user.phone}" /></td>
+          <td><input class="update-input" type="text" value="${user.plan}" /></td>
+          <td><input class="update-input" type="text" value="${userStatus}" /></td>
+          <td>${createdAtTxt}</td>
+        </tr>
+      `;
+
+      table.append(tbody)
+      content.append(table)
+      section.append(content)
+
+      const clickedTable = section.querySelector('table')
+      clickedTable.innerHTML = ''
+    });
+  });
+
+  searchForm.append(input, sbmButton);
+  header.append(span, searchForm);
+  section.append(h2, header);
+}
+
 async function insertAdminData(token, adminData) {
   const adminName = document.querySelector(".admin-name").children[0];
   adminName.innerText = adminData.name;
@@ -234,9 +353,10 @@ async function insertAdminData(token, adminData) {
   const activeUsers = document.getElementById("active-users");
   activeUsers.textContent = activeResponse.pagination.total;
 
+  const admResponse = await getUsers(token, '?role=admin');
+
   const adminTotal = document.getElementById("admin-total");
-  adminTotal.textContent =
-    response.pagination.totalUsers - response.pagination.total;
+  adminTotal.textContent = admResponse.pagination.total;
 
   const tbody = document.getElementById("users-table");
 
@@ -275,8 +395,8 @@ async function insertAdminData(token, adminData) {
           searchUser(token);
           break;
 
-        case "conteudo":
-          console.log("conteudo");
+        case "update-user":
+          updateUser(token)
           break;
 
         case "planos":
@@ -295,7 +415,6 @@ async function insertAdminData(token, adminData) {
 }
 
 async function startApp(token, userData) {
-  console.log(userData);
   insertAdminData(token, userData);
 }
 
@@ -304,7 +423,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const user = await userData(token, localStorage.getItem("userId"));
 
   if (!token || !user) {
-    location.href = "./login.html";
+    // location.href = "./login.html";
   } else {
     startApp(token, user);
   }
