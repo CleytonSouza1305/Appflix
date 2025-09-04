@@ -290,6 +290,30 @@ tbody tr:hover {
   border-bottom: 1px solid #cacaca;
 }
 
+.update-content-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.update-content-buttons button {
+  width: 150px;
+  background-color: transparent;
+  border: 1px solid hsl(0, 0%, 43%);
+  color: hsl(0, 0%, 53%);
+  border-radius: 6px;
+  padding: .5rem .8rem;
+  cursor: pointer;
+  transition: ease-in-out 0.2s;
+  font-weight: 600;
+}
+
+.update-content-buttons button:hover {
+  border-color: hsl(0, 0%, 73%);
+  color: hsl(0, 0%, 83%);
+}
+
 .display {
   display: none;
 }

@@ -18,7 +18,7 @@ async function userData(token, id) {
 
     if (!response.ok) {
       console.error(`Erro na requisição, motivo: ${data.message}`);
-      return []
+      return [];
     }
 
     return data;
@@ -70,7 +70,7 @@ function renderTable(users, tbody) {
 
   users.forEach((u) => {
     const tr = document.createElement("tr");
-    const createdAtData = u.createdAt || u.created_at
+    const createdAtData = u.createdAt || u.created_at;
 
     const createdAt = new Date(createdAtData);
     const createdAtTxt = createdAt.toLocaleDateString("pt-BR", {
@@ -93,7 +93,7 @@ function renderTable(users, tbody) {
     tbody.append(tr);
   });
 
-  console.log(users)
+  console.log(users);
 }
 
 function renderPagination(pagination, value, tbody, table, token) {
@@ -121,7 +121,7 @@ function renderPagination(pagination, value, tbody, table, token) {
     }
 
     page.addEventListener("click", async () => {
-      if (i === currentPage) return
+      if (i === currentPage) return;
 
       const actualPageData = await getUsers(
         token,
@@ -243,8 +243,11 @@ async function updateUser(token) {
   searchForm.addEventListener("submit", async (ev) => {
     ev.preventDefault();
 
-    const contentDt = section.querySelector(".update-user-container")
-    if (contentDt) contentDt.remove()
+    const contentDt = section.querySelector(".update-user-container");
+    if (contentDt) contentDt.remove();
+
+    const buttonsContainer = section.querySelector(".update-content-buttons");
+    if (buttonsContainer) buttonsContainer.remove();
 
     const input = document.getElementById("search-user-input");
     const value = input.value.trim();
@@ -281,22 +284,22 @@ async function updateUser(token) {
     </tr>
   `;
     const tbody = document.createElement("tbody");
-    tbody.classList.add('update-user-tbody')
+    tbody.classList.add("update-user-tbody");
 
     renderTable([user], tbody);
     table.append(thead, tbody);
 
-    tbody.addEventListener('click', (ev) => {
-      const dataContent = section.querySelector(".update-user-container")
-      if (dataContent) return
+    tbody.addEventListener("click", (ev) => {
+      const dataContent = section.querySelector(".update-user-container");
+      if (dataContent) return;
 
-      const content = document.createElement("div")
-      content.classList.add("update-user-container")
+      const content = document.createElement("div");
+      content.classList.add("update-user-container");
 
-      const table = document.createElement('table')
-      table.classList.add('update-user-table')
+      const table = document.createElement("table");
+      table.classList.add("update-user-table");
 
-      const createdAtData = user.createdAt || user.created_at
+      const createdAtData = user.createdAt || user.created_at;
 
       const createdAt = new Date(createdAtData);
       const createdAtTxt = createdAt.toLocaleDateString("pt-BR", {
@@ -305,7 +308,10 @@ async function updateUser(token) {
         year: "numeric",
       });
 
-      const tbody = document.createElement('tbody')
+      const tbody = document.createElement("tbody");
+      const form = document.createElement("form");
+      form.id = "update-user-form";
+
       let userStatus = "Ativo";
       if (!user.isActive) userStatus = "Inativo";
       tbody.innerHTML = `
@@ -319,12 +325,41 @@ async function updateUser(token) {
         </tr>
       `;
 
-      table.append(tbody)
-      content.append(table)
-      section.append(content)
+      const updateContentButtons = document.createElement("div");
+      updateContentButtons.classList.add("update-content-buttons");
 
-      const clickedTable = section.querySelector('table')
-      clickedTable.innerHTML = ''
+      const updateButton = document.createElement("button");
+      updateButton.type = "submit";
+      updateButton.textContent = "Atualizar";
+      updateButton.classList.add("update-btn");
+
+      const cancelButton = document.createElement("button");
+      cancelButton.type = "button";
+      cancelButton.textContent = "Cancelar";
+      cancelButton.classList.add("cancel-btn");
+
+      updateContentButtons.append(cancelButton, updateButton);
+
+      table.append(tbody);
+      content.append(table);
+      form.append(content, updateContentButtons);
+      section.append(form);
+
+      const clickedTable = section.querySelector("table");
+      clickedTable.innerHTML = "";
+
+      cancelButton.addEventListener("click", () => {
+        const buttonsContainer = section.querySelector(
+          ".update-content-buttons"
+        );
+        if (buttonsContainer) buttonsContainer.remove();
+        content.remove();
+      });
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        alert()
+      })
     });
   });
 
@@ -353,7 +388,7 @@ async function insertAdminData(token, adminData) {
   const activeUsers = document.getElementById("active-users");
   activeUsers.textContent = activeResponse.pagination.total;
 
-  const admResponse = await getUsers(token, '?role=admin');
+  const admResponse = await getUsers(token, "?role=admin");
 
   const adminTotal = document.getElementById("admin-total");
   adminTotal.textContent = admResponse.pagination.total;
@@ -388,7 +423,7 @@ async function insertAdminData(token, adminData) {
 
       switch (id) {
         case "dashboard":
-          location.reload()
+          location.reload();
           break;
 
         case "usuarios":
@@ -396,7 +431,7 @@ async function insertAdminData(token, adminData) {
           break;
 
         case "update-user":
-          updateUser(token)
+          updateUser(token);
           break;
 
         case "planos":
