@@ -53,7 +53,7 @@ async function getUsers(token, query) {
 
     if (!response.ok) {
       console.error(`Erro na requisição, motivo: ${data.message}`);
-      // location.href = "./login.html";
+      location.href = "./login.html";
       return;
     }
 
@@ -458,7 +458,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const user = await userData(token, localStorage.getItem("userId"));
 
   if (!token || !user) {
-    // location.href = "./login.html";
+    location.href = "./login.html";
   } else {
     startApp(token, user);
   }
